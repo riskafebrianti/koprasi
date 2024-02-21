@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="case_menu" name="Case Management" inherit_id="portal.portal_my_home" customize_show="True">
+            <xpath expr="//div[1]" position="inside">
+                <li class="list-group-item">
+                    <span class="nav-item" t-esc="case_title"/>
+                    <a href="/JumlahTagihan" style="color:black; display: block; hover"> Jumlah Tagihan</a>        
+                </li>        
+            </xpath>
+        </template>
+
+        <template id="object">
+           <title>Jumlah</title>
+           <t t-foreach="object" t-as="inv">
+                <p> <t t-esc="inv"/></p>
+           </t>
+        </template>
+</odoo>
