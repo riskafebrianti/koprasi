@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="portal_my" name="Portal layout : Rekap" inherit_id="portal.portal_breadcrumbs">
+    <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+        <li t-if="page_name == 'rekap'"
+            class="breadcrumb-item active">
+            <span>Jumlah Tagihan</span>
+        </li>
+    </xpath>
+</template>
+
+<template id="case_menu" name="Case Management" inherit_id="portal.portal_my_home" customize_show="True">
+    <xpath expr="//div[1]" position="inside">
+        <li class="list-group-item">
+            <span class="nav-item" t-esc="case_title"/>
+            <!-- <a t-attf-href = " # {docs.product_template_id.e_link_full}" > Rekap </a> -->
+            <a href="/rekap/" style="color:black; display: block; hover"> Jumlah Tagihan</a>        
+        </li>        
+    </xpath>
+</template>
+
+ <template id="rekap">
+    <t t-call="portal.portal_layout"> 
+
+        <section style="background-color: #eee;">
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src="/cust_portal/static/ss.png" alt="avatar"
+                                 style="width: 150px;"/> 
+                                <!-- <img t-att-src="'data:image/png;base64,%s' % to_text(.image_1920)"/>
+                                 <field name="image_1920" widget="image" optional="show"/> -->
+                                <h5 class="my-3"><t t-esc="request.env.user.partner_id.name"/></h5>
+                                <h6 style="margin-top:-15px;"><t t-esc="request.env.user.partner_id.noga"/></h6>
+                                <p class="text-muted mb-1"><t t-esc="request.env.user.partner_id.commercial_company_name"/></p>
+                                <p class="text-muted mb-4"><t t-esc="request.env.user.partner_id.function"/></p>
+                            </div>
+                        </div>
+
+                          <!-- <div class="card mb-4 mb-lg-0">
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    
+                                    <p class="mb-0"><b>Bulan Lalu</b><br/> 
+                                    <t t-esc="datetime.datetime.now().replace (datetime.datetime.now().year, datetime.datetime.now().month-2, day=22).strftime('%A, %d, %B %Y')"/>
+                                    
+                                    </p>
+                                    
+                                    
+                                    
+                                </li>
+                            
+                                </ul>
+                            </div>
+                        </div> -->
+                        
+                        <div class="card mb-4 mb-lg-0">
+                            <div class="card-body p-0">
+                                <ul class="list-group list-group-flush rounded-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <!-- <i class="fas fa-globe fa-lg text-warning"></i> -->
+                                    <p class="mb-0"><b>Belanja langsung di Toko </b><br/> Jam Layanan Tiap Hari Kerja Pukul 08.00-17.00
+                                    </p>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <!-- <i class="fab fa-github fa-lg" style="color: #333333;"></i> -->
+                                    <p class="mb-0"><b>Order Online.</b> <br/>(Pagi Pesan Sore Bawa Pulang) pukul 08.00-11.00 </p>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <!-- <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i> -->
+                                    <p class="mb-0"><b>Loket Pembayaran Online. </b><br/> Melayani Semua jenis Pembayaran dan Pembelian secara Realtime-Online Pukul 08.00-17.00</p>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                    <!-- <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i> -->
+                                    <p class="mb-0"><b>Klaim Nota.</b> <br/> (Syarat dan Ketentuan Berlaku) Pukul 08.00 - 12.00 
+                                    </p>
+                                </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                       
+
+                    </div>
+               
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                                        
+                                <div class="row">
+                                    <div class="card mb-4">
+                                        <p class="fw-bolder" style="margin-top:12px !important;">Jumlah Potongan Periode buku :</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Potongan Pinjaman</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(loan))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <!-- <p class="text-muted mb-0">Rp. <t t-esc="invtotal()"/></p> -->
+
+                                    </div>
+
+
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Waserda / Sembako</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(totalinv))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <!-- <p class="text-muted mb-0">Rp. <t t-esc="invtotal()"/></p> -->
+
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Potongan Simpanan Pokok</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    
+                                    <t t-if="not simpok">
+                                        <p class="text-muted mb-0">Rp. -</p>
+                                    </t>
+                                    <t t-else="">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpok))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                    </t>
+                                    </div>
+                                </div>
+                                <!-- <br/> -->
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Potongan Simpanan Wajib</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <t t-if="not simwab">
+                                            <p class="text-muted mb-0">Rp. -</p>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwab))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        </t>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Potongan Simpanan Sukarela</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <t t-if="not simsuk">
+                                            <p class="text-muted mb-0">Rp. -</p>
+                                        </t>
+                                        <t t-else="">
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsuk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        </t>
+                                    </div>
+                                </div>
+                                <!-- total -->
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="my-3 fw-bold" style="color:black;">Total Potongan</p>
+                                    </div>
+                                    
+                                    <div class="col-sm-6">
+                                        <p class="my-3 fw-bold">Rp. <t t-esc="'{0:,.2f}'.format(int(loan+totalinv+simpok+simsuk+simwab))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <!-- <p class="my-3 fw-bold">Rp. <t t-esc="loan+totalinv+simpok+simsuk+simwab"/></p> -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                   
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                                        
+                                <div class="row">
+                                    <div class="card mb-4">
+                                        <p class="fw-bolder" style="margin-top:12px !important;">Data Saldo Simpanan Koperasi:</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Saldo Simpanan Pokok</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpoktotal))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Saldo Simpanan Wajib</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwabtotal))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="mb-0">Saldo Simpanan Sukarela</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsuktotal))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                    </div>
+                                </div>
+                                <!-- total -->
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="my-3 fw-bold" style="color:black;">Total Simpanan</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p class="my-3 fw-bold">Rp. <t t-esc="'{0:,.2f}'.format(int(simpoktotal+simwabtotal+simsuktotal))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                                        
+                                <div class="row">
+                                    <div class="card mb-4">
+                                        <p class="fw-text-muted mb-0" style="margin-top:12px !important;">
+                                        Demikian dan Terimakasih<br/>
+                                        Best Regards<br/>
+                                        Koperasi Trinity Maju Sejahtera<br/><br/>
+
+                                        <strong style="color: blue; font-size: 10px;">*Silahkan Hubungi Kami Jika Data Tidak Sesuai</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                             
+                                <!-- total -->
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+            </div>
+        
+        </section>
+
+        <!-- data tes -->
+
+          <!-- <thead>
+                <tr class="active">
+                    <th>Invoice #</th>
+                    <th>Invoice Date</th>
+                    <th class='d-none d-md-table-cell'>Due Date</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-end">Amount Due</th>
+                </tr>
+            </thead> -->
+            <tbody>
+                <!-- <t t-foreach="invoicess" t-as="rekap">
+                    <tr> -->
+                        <!-- <td>
+                            <a t-att-href="loan.get_portal_url()" t-att-title="loan.name">
+                                <t t-esc="loan.name" t-if="loan.name != '/'"/>
+                                <em t-else="">Draft Invoice</em>
+                            </a>
+                        </td> -->
+                      
+                        <!-- <td><span t-field="loan.name"/></td> -->
+                        <!-- <td><span t-field="loan.partner_id.name"/></td> -->
+                        <!-- <td><span t-esc="rekap.amount_total"/></td> -->
+                        <!-- <span t-esc="'{0:,.2f}'.format(int(sum(record.amount_total_signed for record in x.invoice_list.filtered(lambda r: r.to_check == True))))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/> -->
+                        
+                
+                    <!-- </tr> -->
+                    
+                    
+                <!-- </t> -->
+                <!-- <span t-esc="'{0:,.2f}'.format(int(sum(rekap.amount_untaxed for rekap in invoicess)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/> -->
+            </tbody>
+    </t>
+  
+</template> 
+
+
+<!-- <template id="rekap">
+     <t t-call="portal.portal_layout">           
+      
+        <section class="vh-100" style="background-color: #fff;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-md-9 col-lg-7 col-xl-5">
+                <div class="card" style="border-radius: 15px;">
+                <div class="card-body p-4">
+                    <div class="d-flex text-black">
+                    <div class="flex-shrink-0">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                        alt="Generic placeholder image" class="img-fluid"
+                        style="width: 180px; border-radius: 10px;"/>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="mb-1">Danny McLoan</h5>
+                        <p class="mb-2 pb-1" style="color: #2b2a2a;">Senior Journalist</p>
+                        <div class="d-flex justify-content-start rounded-3 p-2 mb-2"
+                        style="background-color: #efefef;">
+                        <div>
+                            <p class="small text-muted mb-1">Articles</p>
+                            <p class="mb-0">41</p>
+                        </div>
+                        <div class="px-3">
+                            <p class="small text-muted mb-1">Followers</p>
+                            <p class="mb-0">976</p>
+                        </div>
+                        <div>
+                            <p class="small text-muted mb-1">Rating</p>
+                            <p class="mb-0">8.5</p>
+                        </div>
+                        </div>
+                        <div class="d-flex pt-1">
+                        <button type="button" class="btn btn-outline-primary me-1 flex-grow-1">Chat</button>
+                        <button type="button" class="btn btn-primary flex-grow-1">Follow</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+     </t>
+  
+</template> -->
+    
+   <!-- <template id="rekap" name="Invoice Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (rekap._name, rekap.id, rekap.env.ref('account.action_move_out_invoice_type').id)"/>
+                </t>
+            </t>
+
+            
+        </xpath>
+        HAI
+    </template> -->
+    
+</odoo>

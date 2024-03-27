@@ -9,7 +9,11 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
+class NamaModel(models.Model):
+    _inherit = 'res.partner'
 
+    noga = fields.Char('Nomor Anggota')
+    
 class company(models.Model):
     _inherit = 'account.move'
 

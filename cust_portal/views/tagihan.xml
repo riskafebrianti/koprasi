@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+     <template id="subjects">
+        <title>HALAMAN LIST TAGIHAN</title>
+        <!-- <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" /> -->
+        <t t-foreach="subjects" t-as="subject">
+            <!-- <tr>
+                <td><span t-esc="subjects.name" /></td>
+                <td><span t-esc="subjects.partner_id.name" /></td>
+            </tr> -->
+            <p><t t-esc="subject"/></p>
+        </t>
+    </template>
+
+</data>
+
+</odoo>

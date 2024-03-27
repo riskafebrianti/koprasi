@@ -28,6 +28,7 @@
         'views/views.xml',
         'views/templates.xml',
         'views/followup.xml',
+        'views/res.xml',
         'views/invoice.xml',
         # 'static/src/xml/uom.xml',
     ],

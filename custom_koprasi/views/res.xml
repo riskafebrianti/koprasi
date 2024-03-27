@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+        <record id="inherit_view_order_form_res" model="ir.ui.view">
+        <field name="name">res.partner.inherit.view.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Add your xpath here -->
+            <field name="vat" position="after">
+                <field name="noga"></field> 
+                
+            </field>
+          
+        </field>
+    </record>
+        
+    
+    </odoo>
+    

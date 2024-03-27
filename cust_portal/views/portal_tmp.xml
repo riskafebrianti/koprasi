@@ -1,18 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <template id="case_menu" name="Case Management" inherit_id="portal.portal_my_home" customize_show="True">
-            <xpath expr="//div[1]" position="inside">
-                <li class="list-group-item">
-                    <span class="nav-item" t-esc="case_title"/>
-                    <a href="/JumlahTagihan" style="color:black; display: block; hover"> Jumlah Tagihan</a>        
-                </li>        
-            </xpath>
-        </template>
+     
 
-        <template id="object">
-           <title>Jumlah</title>
-           <t t-foreach="object" t-as="inv">
-                <p> <t t-esc="inv"/></p>
-           </t>
-        </template>
+
+
+<template id="sum"  inherit_id="account.portal_my_invoices">
+    <xpath expr="//tbody[1]" position="after">
+         <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-end">Rp <span t-esc="'{0:,.2f}'.format(int(sum(record.amount_residual for record in invoices)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></td>
+
+
+            </tr>
+    </xpath>
+</template>
+
+<!-- loan -->
+    <template id="portal" name="Show Invoices &amp; Bills" inherit_id="portal.portal_my_home" customize_show="True">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">sdda &amp; Bills</t>
+                <t t-set="url" t-value="'/my/loan'"/>
+                <t t-set="placeholder_count" t-value="'loan_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+           <li t-if="page_name == 'loan'"
+            	class="breadcrumb-item active">
+            	<span>Payslips</span>
+        	</li>
+        </xpath>
+    </template>
+
+
+
+<template id="loanTes">
+      <t t-call="portal.portal_layout">
+        <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title">Invoices</t>
+        </t>
+        <t t-if="not loan">
+            <p>There are currently no invoices and payments for your account.</p>
+        </t>
+        <t t-call="portal.portal_table">
+            <thead>
+                <tr class="active">
+                    <th>Invoice #</th>
+                    <th>Invoice Date</th>
+                    <th class='d-none d-md-table-cell'>Due Date</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-end">Amount Due</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="invoicess" t-as="loan">
+                    <tr>
+                        <!-- <td>
+                            <a t-att-href="loan.get_portal_url()" t-att-title="loan.name">
+                                <t t-esc="loan.name" t-if="loan.name != '/'"/>
+                                <em t-else="">Draft Invoice</em>
+                            </a>
+                        </td> -->
+                      
+                        <td><span t-field="loan.name"/></td>
+                        <!-- <td><span t-field="loan.partner_id.name"/></td> -->
+                        <td><span t-field="loan.periods"/></td>
+                        <td><span t-field="loan.method_period"/></td>
+                        <td><span t-field="loan.loan_amount"/></td>
+                
+                    </tr>
+                    
+                    
+                </t>
+            </tbody>
+           
+        </t>
+      </t>
+    </template>
+
+
+<!-- ==== data yang bener ==== -->
+
+<!-- <template id="loanTes">
+ <t t-call="portal.portal_layout">
+        <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title">Invoices</t>
+        </t>
+        <t t-call="portal.portal_table">
+            <thead>
+                <tr>
+                    
+                    <th>No. Pinjaman</th>
+                    <th>Nama Peminjam</th>
+                    <th>Tenor</th>
+                    <th>Jangka Waktu</th>
+                    <th>Jumlah Pinjaman</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="invoicess" t-as="loan">
+                    <tr>
+                        <th><span t-field="loan.name"/></th>
+                        <th><span t-field="loan.partner_id.name"/></th>
+                        <th><span t-field="loan.periods"/></th>
+                        <th><span t-field="loan.method_period"/></th>
+                        <th><span t-field="loan.loan_amount"/></th>
+                    </tr>
+                </t>
+                
+            </tbody>
+             <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total</td>
+                <td>Rp <span t-esc="'{0:,.2f}'.format(int(sum(record.loan_amount for record in invoicess)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></td>
+
+
+            </tr>
+           
+        </t>
+      </t>
+</template> -->
 </odoo>

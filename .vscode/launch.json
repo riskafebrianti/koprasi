@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    // "configurations": [
+    //     {
+    //         "name": "Python Debugger: Current File",
+    //         "type": "debugpy",
+    //         "request": "launch",
+    //         "program": "D:/odoo/KOP/odoo-bin",
+    //         "console": "integratedTerminal",
+    //        // "justMyCode": true
+    //         "args": [
+    //             "--config=D:/odoo/KOP/odoo.conf",
+    //             "--database=tester_kop",
+    //             "-u cust_portal",
+    //             "--update=cust_portal",
+    //         ]
+    //     }
+    // ]
+    "configurations": [
+
+        {
+            "name": "Run Odoo",
+            "type": "debugpy",
+            "request": "launch",
+            "stopOnEntry": false,
+            "console": "integratedTerminal",
+            "python": "C:/Program Files/Python310/python.exe",
+            "program": "D:/odoo/KOP/odoo-bin",
+            "args": [
+                "--config=D:/odoo/KOP/odoo.conf",
+                "--database=koperasi",
+                "-u custom_koprasi",
+                "--update=custom_koprasi",
+                "-u cust_portal",
+                "--update=cust_portal",
+            ]
+        }
+    ]
+}
