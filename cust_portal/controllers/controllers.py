@@ -72,7 +72,7 @@ class PortalAccount(portal.CustomerPortal):
         
         partner = request.env.user.partner_id
         values = self._prepare_portal_layout_values()
-        AccountInvoices = request.env['account.loan'].search([])
+        AccountInvoices = request.env['account.move'].search([])
 
         domain = expression.AND([
             domain or [],
@@ -86,11 +86,11 @@ class PortalAccount(portal.CustomerPortal):
         #     sortby = 'date'
         # order = searchbar_sortings[sortby]['order']
 
-        # searchbar_filters = self._get_account_searchbar_filters()
-        # # default filter by value
-        # if not filterby:
-        #     filterby = 'all'
-        # domain += searchbar_filters[filterby]['domain']
+        searchbar_filters = self._get_account_searchbar_filters()
+        # default filter by value
+        if not filterby:
+            filterby = 'all'
+        domain += searchbar_filters[filterby]['domain']
 
         # if date_begin and date_end:
         #     domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
@@ -108,11 +108,11 @@ class PortalAccount(portal.CustomerPortal):
             #     "page": page,
             #     "step": self._items_per_page,
             # },
-            # 'default_url': url,
+            'default_url': url,
             # 'searchbar_sortings': searchbar_sortings,
-            # 'sortby': sortby,
-            # 'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            # 'filterby': filterby
+            'sortby': sortby,
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            'filterby': filterby
         })
         return values
 

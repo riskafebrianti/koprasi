@@ -73,10 +73,10 @@
                       
                         <td><span t-field="loan.name"/></td>
                         <!-- <td><span t-field="loan.partner_id.name"/></td> -->
-                        <td><span t-field="loan.periods"/></td>
+                        <!-- <td><span t-field="loan.periods"/></td>
                         <td><span t-field="loan.method_period"/></td>
                         <td><span t-field="loan.loan_amount"/></td>
-                
+                 -->
                     </tr>
                     
                     

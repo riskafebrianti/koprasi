@@ -31,7 +31,7 @@
             "program": "D:/odoo/KOP/odoo-bin",
             "args": [
                 "--config=D:/odoo/KOP/odoo.conf",
-                "--database=koperasi",
+                // "--database=koperasi",
                 "-u custom_koprasi",
                 "--update=custom_koprasi",
                 "-u cust_portal",

@@ -7,8 +7,24 @@
             class="breadcrumb-item active">
             <span>Jumlah Tagihan</span>
         </li>
+        
     </xpath>
 </template>
+
+<!-- <template id="portal_my_home_menu_attendance"
+         name="Portal layout : Attendance menu entries"
+         inherit_id="portal.portal_breadcrumbs" priority="30">
+   <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+       <li t-if="page_name == 'rekap'"
+           t-attf-class="breadcrumb-item #{'active ' if not rekap else ''}">
+           <a t-if="rekap"
+              t-attf-href="/rekap/list?{{ keep_query() }}">
+               Attendance
+           </a>
+           <t t-else="">Attendance</t>
+       </li>
+   </xpath>
+</template> -->
 
 <template id="case_menu" name="Case Management" inherit_id="portal.portal_my_home" customize_show="True">
     <xpath expr="//div[1]" position="inside">
@@ -20,9 +36,21 @@
     </xpath>
 </template>
 
+<template id="dropdown_template" name="Dropdown Template">
+        <select>
+            <t t-foreach="categories" t-as="category">
+                <option t-value="category.id"><t t-esc="category.name"/></option>
+            </t>
+        </select>
+</template>
+
  <template id="rekap">
     <t t-call="portal.portal_layout"> 
+         <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
+          <t t-call="portal.portal_searchbar">
+              <t t-set="title">Purchase Orders</t>
+          </t>
         <section style="background-color: #eee;">
             <div class="container py-5">
                 <div class="row">
@@ -40,23 +68,25 @@
                             </div>
                         </div>
 
-                          <!-- <div class="card mb-4 mb-lg-0">
+                          <div class="card mb-4 mb-lg-0">
                             <div class="card-body p-0">
                                 <ul class="list-group list-group-flush rounded-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                     
-                                    <p class="mb-0"><b>Bulan Lalu</b><br/> 
-                                    <t t-esc="datetime.datetime.now().replace (datetime.datetime.now().year, datetime.datetime.now().month-2, day=22).strftime('%A, %d, %B %Y')"/>
-                                    
-                                    </p>
-                                    
-                                    
-                                    
+                                    <p class="mb-0"><b>Lihat Juga</b><br/> </p>
+                                    <form action="/rekap/" method="get">
+                                        <select name="filterr">
+                                            <option value="bulan_ini">Bulan Sekarang</option>
+                                            <option value="bulan_lalu">Bulan Lalu</option>
+                                            
+                                        </select>
+                                        <input type="submit" value="Apply Filter"/>
+                                    </form>
                                 </li>
                             
                                 </ul>
                             </div>
-                        </div> -->
+                        </div>
                         
                         <div class="card mb-4 mb-lg-0">
                             <div class="card-body p-0">
@@ -102,7 +132,18 @@
                                         <p class="mb-0">Potongan Pinjaman</p>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(loan))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <div class="text-muted mb-0">
+                                    
+                                        <t t-if="not loann">
+                                            <p class="text-muted mb-0">Rp. -</p>
+                                        </t>
+                                        <t t-else="">
+                                            <span>Rp. <t t-esc="'{0:,.2f}'.format(int(loan))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/> </span>
+                                            <!-- <span><em class="text-info fw-bolder">Pinjaman Ke</em> <t t-esc="loann[1].ref[loann[1].ref.find('-'):][1:]"/></span> -->
+                                            <!-- <span><em class="text-info fw-bolder">Dari</em> <t t-esc="loan[1].move_id.loan_id.periods"/></span> -->
+                                        </t>
+
+                                        </div>
                                         <!-- <p class="text-muted mb-0">Rp. <t t-esc="invtotal()"/></p> -->
 
                                     </div>
@@ -115,7 +156,14 @@
                                         <p class="mb-0">Waserda / Sembako</p>
                                     </div>
                                     <div class="col-sm-6">
+
+                                    <t t-if="not totalinv">
+                                        <p class="text-muted mb-0">Rp. - </p>
+                                    </t>
+                                    <t t-else="">
                                         <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(totalinv))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <!-- <p class="text-muted mb-0">Rp. <t t-esc="sum(inv.amount_untaxed for record in values.get('invoicess')))" /></p> -->
+                                    </t>
                                         <!-- <p class="text-muted mb-0">Rp. <t t-esc="invtotal()"/></p> -->
 
                                     </div>
@@ -172,7 +220,7 @@
                                     </div>
                                     
                                     <div class="col-sm-6">
-                                        <p class="my-3 fw-bold">Rp. <t t-esc="'{0:,.2f}'.format(int(loan+totalinv+simpok+simsuk+simwab))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <p class="my-3 fw-bold">Rp. <t t-esc="'{0:,.2f}'.format(int(totalpotongan))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                         <!-- <p class="my-3 fw-bold">Rp. <t t-esc="loan+totalinv+simpok+simsuk+simwab"/></p> -->
                                     </div>
                                 </div>

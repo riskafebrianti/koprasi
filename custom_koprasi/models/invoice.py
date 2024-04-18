@@ -6,7 +6,10 @@ import math
 import numpy_financial 
 from datetime import datetime
 
+
 from dateutil.relativedelta import relativedelta
+
+
 
 
 class NamaModel(models.Model):
@@ -14,29 +17,36 @@ class NamaModel(models.Model):
 
     noga = fields.Char('Nomor Anggota')
     
-class company(models.Model):
+# class company(models.Model):
+#     _inherit = 'account.move'
+
+#     # company = fields.Char('Company')
+    
+#     # partner_id = fields.Char('partner id', related='loan_id.partner_id.name')
+    
+#     # custt = fields.Char('Customerr', related ='loan_id.partner_id.name')
+
+    # @api.depends('quantity', 'price')
+    # def all_partner_id(self):
+        # self.price_total = self.quantity * self.price
+    
+
+
+
+class loan(models.Model):
     _inherit = 'account.move'
 
-    # company = fields.Char('Company')
-    company = fields.Char('Company', related='partner_id.commercial_company_name')
-    # partner_id = fields.Char('partner id', related='loan_id.partner_id.name')
+    custtt = fields.Char('Customer', related='line_ids.partner_id.display_name')
     cust = fields.Char('Customer', related='partner_id.name')
-    # self.partner_id = self.loan_id.partner_id.name
-    # partner_id = fields.Many2one(compute='_compute_partner_id')
-    
-    # @api.onchange("partner_id")
-    # def _compute_partner_id(self):
-    #     if self.loan_id:
-    #         partner = self.line_ids.filtered(lambda p: p.partner_id.id != False)
-    #         self.partner_id  = self.line_ids.partner_id
-                        
-        # if self.partner_id:
-        #     for line in self.partner_id:
-        #         line.partner_id = self.partner_id
-
+    company = fields.Char('Company', related='partner_id.commercial_company_name')
 
      
- 
+    # def action_custom_button(self):
+        
+    #     partner = self.env['account.move'].create({'journal_id':'3'})
+
+    #     # })
+    #     print(partner)
 
 class AccountLoanPost(models.TransientModel):
     _inherit = "account.loan.post"
@@ -54,6 +64,9 @@ class AccountLoanPost(models.TransientModel):
 
 class accountloan(models.Model):
     _inherit = 'account.loan'
+
+    loan_date = fields.Date('Loan Date')
+
 
     loan_type = fields.Selection(
         [
