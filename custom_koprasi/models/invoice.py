@@ -1,5 +1,5 @@
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError,ValidationError
 import math
 import logging
 import math
@@ -12,10 +12,24 @@ from dateutil.relativedelta import relativedelta
 
 
 
-class NamaModel(models.Model):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
-
+    
     noga = fields.Char('Nomor Anggota')
+    no_anggota = fields.Integer('Nomor Anggota',tracking=1)
+    anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1)
+    
+    _sql_constraints = [
+        ("noga_check", "unique(no_anggota)", "Nomor Anggota already exists"),
+    ]
+
+    @api.model
+    def create(self, vals):
+        print(vals)
+        partners = self.env['res.partner'].sudo().search([('no_anggota','!=',''),('is_company','=',False)],order='no_anggota desc',limit=1)
+        if vals['is_company'] == False and vals['anggota_koprasi'] == True:
+            vals['no_anggota'] = partners.no_anggota + 1
+        return super(ResPartner, self).create(vals)
     
 # class company(models.Model):
 #     _inherit = 'account.move'
@@ -31,7 +45,14 @@ class NamaModel(models.Model):
         # self.price_total = self.quantity * self.price
     
 
-
+class Account(models.Model):
+    _inherit = 'account.account'
+    simpok = fields.Boolean('Simpok', tracking=1)
+    simwab = fields.Boolean('Simwab', tracking=1)
+    amount = fields.Float(string='Amount', tracking=1)
+    counter_account = fields.Many2one(comodel_name='account.account', string='Counter Account', tracking=1)
+    
+    
 
 class loan(models.Model):
     _inherit = 'account.move'
@@ -39,6 +60,36 @@ class loan(models.Model):
     custtt = fields.Char('Customer', related='line_ids.partner_id.display_name')
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
+    simwab = fields.Boolean(string='Entries Simwab')
+
+    def load_simwab(self):
+        print(self)
+        partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True),('no_anggota','>',0)])
+        line_ids = []
+        simwab_account = self.env['account.account'].sudo().search([('simwab','=',True)])
+        if not simwab_account:
+            raise ValidationError(_("Simwab Account tidak ditemukan"))
+        for partner in partners:
+            line_data = ((0,0,{
+                'partner_id': partner.id,
+                'account_id': simwab_account.id,
+                'name': 'Simpanan Wajib '+datetime.today().strftime('%Y-%m'),
+                'debit': simwab_account.amount,
+                'credit':0,
+            }))
+            line_ids.append(line_data)
+            line_data = ((0,0,{
+                'partner_id': partner.id,
+                'account_id': simwab_account.counter_account.id,
+                'name': 'Simpanan Wajib '+datetime.today().strftime('%Y-%m'),
+                'debit': 0,
+                'credit':simwab_account.amount,
+            }))
+            line_ids.append(line_data)
+        if line_ids:
+            self.write({'line_ids': line_ids})
+        print("aww")
+    
 
      
     # def action_custom_button(self):
