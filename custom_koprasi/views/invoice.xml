@@ -88,7 +88,16 @@
         </field>
     </record>
      
-
+    <record model="ir.ui.view" id="nama_model_treeasa">
+        <field name="name">account.move</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', False)]</attribute>
+            </xpath>
+        </field>
+    </record>
 
 
 </odoo>
