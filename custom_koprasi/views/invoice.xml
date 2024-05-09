@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <!-- <data>
         <record model="ir.ui.view" id="account_move_tree">
             <field name="name">account.move.tree</field>
@@ -13,19 +14,16 @@
         </record>
     </data> -->
 
-    <record id="inherit_view_sales_new" model="ir.ui.view">
+    <!-- <record id="inherit_view_sales_new_company" model="ir.ui.view">
         <field name="name">account.move</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_out_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="company"></field>
-                <!-- <field name="partner_id"></field> -->
-                <!-- <field name="cust"></field> -->
-                                
+                <field name="company"></field>                 
             </field>
         </field>
-    </record>
+    </record> -->
 
     <record id="inherit_view_sales_new" model="ir.ui.view">
         <field name="name">account.move</field>
@@ -37,11 +35,14 @@
                 <!-- <field name="cust"></field> -->
                                 
             </field>
+             <!-- <field name="partner_id" position="after">
+                <field name="add"></field>                                
+            </field> -->
             
         </field>
     </record>
 
-    <record id="inherit_view_sales_new" model="ir.ui.view">
+    <record id="inherit_view_sales_neww" model="ir.ui.view">
         <field name="name">account.loan</field>
         <field name="model">account.loan</field>
         <field name="inherit_id" ref="account_loan.account_loan_form"/>
@@ -99,6 +100,21 @@
         </field>
     </record>
 
+    <!-- <record model="ir.ui.view" id="account_move_tree_new">
+        <field name="name">customer.statements.followup</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="base_accounting_kit.customer_statements_form_view"/>
+        <field name="arch" type="xml">
+        
+            <xpath expr="//page//field[@name='invoice_list']" position="inside">
+                <tree string="Invoices">
+                    
+                </tree>
+                
+            </xpath>
+        
+        </field>
+    </record> -->
 
 </odoo>
 

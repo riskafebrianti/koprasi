@@ -14,14 +14,27 @@ from dateutil.relativedelta import relativedelta
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-    
+    today = datetime.now().strftime('%Y-%m-%d')
+    date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
     noga = fields.Char('Nomor Anggota')
     no_anggota = fields.Integer('Nomor Anggota',tracking=1)
     anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1)
+    # add = fields.Many2one(comodel_name='account.move', string='Counter Account', tracking=1)
+    # add = fields.Integer('tessss')
+    invoice_list = fields.One2many('account.move', 'commercial_partner_id',
+                                string="Invoice Details",
+                                readonly=True,
+                                domain=(
+                                [('payment_state', '=', 'not_paid'),
+                                ('move_type', '=', 'out_invoice'),
+                                ('date', '=', date_begin),
+                                ('date', '=', today)
+                                ]))
     
     _sql_constraints = [
         ("noga_check", "unique(no_anggota)", "Nomor Anggota already exists"),
     ]
+
 
     @api.model
     def create(self, vals):
@@ -61,6 +74,10 @@ class loan(models.Model):
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
     simwab = fields.Boolean(string='Entries Simwab')
+    # add = fields.Many2one('res.partner', string='Order Reference')
+    # add = fields.Many2one(comodel_name='res.partner', string='Counter Account', tracking=1, related='partner_id')
+    # add = fields.Integer('tessss')
+    
 
     def load_simwab(self):
         print(self)
