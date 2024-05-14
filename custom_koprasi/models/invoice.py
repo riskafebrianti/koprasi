@@ -70,7 +70,7 @@ class Account(models.Model):
 class loan(models.Model):
     _inherit = 'account.move'
 
-    custtt = fields.Char('Customer', related='line_ids.partner_id.display_name')
+    custtt = fields.Char('Customer', related='line_ids.partner_id.display_name',)
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
     simwab = fields.Boolean(string='Entries Simwab')
@@ -134,6 +134,8 @@ class accountloan(models.Model):
     _inherit = 'account.loan'
 
     loan_date = fields.Date('Loan Date')
+  
+    
 
 
     loan_type = fields.Selection(
