@@ -34,20 +34,42 @@ class PortalAccount(portal.CustomerPortal):
         
         # date_begin = today - timedelta(days=1).strftime('%Y-%m-%d')
         # values = self._prepare_my_rekap(page, date_begin, date_end, sortby, filterby, partner)
-        loann = request.env['account.move.line'].search([
-            ('parent_state', '=', ('posted')),
+        # pinjam = request.env['account.move.line'].search([
+        #     ('move_id.state', '=', ('posted')),
+        #     ('partner_id', '=', [partner.id]),
+        #     ('journal_id', '=', (10)),
+        #     # ('account_id', '=', (29))
+        #     # ('date', '<', date_begin) 
+        #     ])
+        
+        # if not pinjam : 
+        #     # pinjam = 0
+            
+        #     pinjaman = 0
+        # else:
+        #     # for x in loan:
+        #     pinjaman = pinjam.line_ids[0].payment_amount
+        
+        loann = request.env['account.loan'].search([
+            ('state', '=', ('posted')),
             ('partner_id', '=', [partner.id]),
-            ('account_id', '=', (29))
+            # ('account_id', '=', (29))
             # ('date', '<', date_begin) 
             ])
         
         if not loann : 
+            # loann = 0
+           
             loann = 0
-            loan = 0
         else:
-            loan = loann[-1].credit
+            # loan = loann.line_ids
+            loantotal = 0
+            for tes in loann: 
+                print(tes)
+                loantotal += tes.line_ids[0].payment_amount
+                # loan
             # loan 
-        # invtotal= (sum(record.amount_untaxed for record in inv))
+        print(loantotal)
         
         inv = request.env['account.move'].search([
             ('state', '=', ('posted')),
@@ -104,12 +126,12 @@ class PortalAccount(portal.CustomerPortal):
             
             ])
         if not simwabdaftar: 
-            simwabdaftar = 0
-            simwab = 0
+            # simwabdaftar = 0
+            # simwab = 0
             simwabb = 0
             simwabtotal = 0
         else:
-            values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar,}
+            values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar, "simpokdaftar":simpokdaftar, "simpok":simpok, "simsukdaftar":simsukdaftar, "simsuk":simsuk}
             simwabb = simwab.amount_currency
             simwabtotal= sum(values.get('simwabdaftar').mapped('amount_currency'))
             # values = {"invoicess":inv, "simwab":simwab, "simwabb":simwabb, "simwabtotal" : simwabtotal, "simwabdaftar" :simwabdaftar,}
@@ -128,7 +150,7 @@ class PortalAccount(portal.CustomerPortal):
         
         if not simsukdaftar : 
             simsukdaftar : 0
-            simsuk = 0
+            # simsuk = 0
             simsukk = 0
             simsuktotal = 0
 
@@ -139,7 +161,7 @@ class PortalAccount(portal.CustomerPortal):
             simsuktotal = sum(values.get('simsukdaftar').mapped('amount_currency'))
             # simsuk = simsuk[-1].move_id.amount_total_signed
 
-        totalpotongan = simpokk+simsukk+simwabb+invtotal+loan
+        totalpotongan = simpokk+simsukk+simwabb+invtotal+loantotal
         values = {
                     "invoicess":inv,  
                     "simpok":simpok, 
@@ -149,7 +171,8 @@ class PortalAccount(portal.CustomerPortal):
                     "simsuk":simsuk,
                     "simsukk":simsukk,
                     "totalinv":invtotal,
-                    "loan":loan,
+                    # "loan":loan, 
+                    "loantotal":loantotal,
                     "totalpotongan" : totalpotongan,
                     "simpoktotal":simpoktotal, 
                     "simwabtotal":simwabtotal, 
@@ -157,15 +180,14 @@ class PortalAccount(portal.CustomerPortal):
                     "simwabdaftar" :simwabdaftar,
                     "simpokdaftar" :simpokdaftar,
                     "simsukdaftar" :simsukdaftar,
+                    # "loannn" :loannn,
                     "today":today,
-                     'page_name' : 'rekap'
-                    
-                    
+                    'page_name' : 'rekap'      
         }
-        # simwabupdate = 
+        
 
         filter  = {
-                    "loann" : loann.search([('date', '<', date_begin),('date', '>', date_pas)]).credit, 
+                    "loann" : loann.search([('date', '<', date_begin),('date', '>', date_pas)]), 
                     "invoicess" : inv.search([('date', '<', date_begin),('date', '>', date_pas)]),
                     "simwab" : simwab.search([('date', '<', date_begin),('date', '>', date_pas)]),
                     "simsuk" : simsuk.search([('account_id', '=', (118)),('partner_id', '=', [partner.id]),('date', '<', date_begin),('date', '>', date_pas)]),
@@ -173,11 +195,8 @@ class PortalAccount(portal.CustomerPortal):
                     "simpok" : simpok.search([('account_id', '=', (116)),('partner_id', '=', [partner.id]),('date', '<', date_begin),('date', '>', date_pas)]),
                     "simpokdaftar" : simpokdaftar.search([('account_id', '=', (116)),('partner_id', '=', [partner.id]),('date', '<', date_begin)]),
                     "simwabdaftar" : simwabdaftar.search([('date', '<=', date_begin)]),
-                    # "simsukdaftar" : simsukdaftar.search([('date', '<=', date_begin),('date', '>=', date_pas)]),
-                    # "simsukdaftar" : simsukdaftar.search([('date', '<=', date_begin)])
-                    # "totalinv" : sum(values.get('invoicess').mapped('amount_untaxed'))
                     }
-        # invtotal= sum(values.get('invoicess').mapped('amount_untaxed'))
+        
         
         if kw.get('filterr') == 'bulan_lalu':
             values.update(filter)
@@ -191,7 +210,7 @@ class PortalAccount(portal.CustomerPortal):
 
             }
             values.update(itung)
-            totalpotongan = values.get('simpok').amount_currency+values.get('simsuk').amount_currency+values.get('simwab').amount_currency+values.get('totalinv')+values.get('loann')
+            totalpotongan = values.get('simpok').amount_currency+values.get('simsuk').amount_currency+values.get('simwab').amount_currency+values.get('totalinv')+values.get('loantotal')
             jumlah={
                 "totalpotongan" : totalpotongan
             }
