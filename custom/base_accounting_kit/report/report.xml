@@ -93,4 +93,5 @@
             <field name="report_file">base_accounting_kit.day_book_report_template</field>
             <field name="attachment_use">True</field>
         </record>
+
 </odoo>
