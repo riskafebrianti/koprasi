@@ -30,6 +30,7 @@
         'views/followup.xml',
         'views/res.xml',
         'views/invoice.xml',
+        'views/res_users.xml'
         # 'static/src/xml/uom.xml',
     ],
     # only loaded in demonstration mode

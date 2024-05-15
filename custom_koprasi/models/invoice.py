@@ -17,20 +17,20 @@ class ResPartner(models.Model):
     
     noga = fields.Char('Nomor Anggota')
     no_anggota = fields.Integer('Nomor Anggota',tracking=1)
-    anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1)
+    anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1, default=False)
     
     _sql_constraints = [
         ("noga_check", "unique(no_anggota)", "Nomor Anggota already exists"),
     ]
 
-    @api.model
-    def create(self, vals):
-        print(vals)
-        partners = self.env['res.partner'].sudo().search([('no_anggota','!=',''),('is_company','=',False)],order='no_anggota desc',limit=1)
-        if vals['is_company'] == False and vals['anggota_koprasi'] == True:
-            vals['no_anggota'] = partners.no_anggota + 1
-        return super(ResPartner, self).create(vals)
-    
+    # @api.model
+    # def create(self, vals):
+    #     print(vals)
+    #     partners = self.env['res.partner'].sudo().search([('no_anggota','!=',''),('is_company','=',False)],order='no_anggota desc',limit=1)
+    #     if vals['is_company'] == False and vals['anggota_koprasi'] == True:
+    #         vals['no_anggota'] = partners.no_anggota + 1
+    #     return super(ResPartner, self).create(vals)
+        
 # class company(models.Model):
 #     _inherit = 'account.move'
 
@@ -275,3 +275,32 @@ class loanline(models.Model):
 #     _inherit = 'account.move.line'
     
 #     partner_id = fields.Char('partner id', related='partner_id.name')
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    def generate_no_anggota(self):
+        print(self)
+        # self.groups_id.filtered(lambda x: x.category_id.name == 'User types')
+        partners = self.env['res.partner'].sudo().search([('no_anggota','!=',''),('is_company','=',False)],order='no_anggota desc',limit=1)
+        no_anggota = partners.no_anggota + 1
+        # if vals['is_company'] == False and vals['anggota_koprasi'] == True:
+        #     vals['no_anggota'] = partners.no_anggota + 1
+        # if self.groups_id.filtered(lambda x: x.category_id.name == 'User types').name == 'Portal':
+        if self.partner_id.no_anggota > 0:
+            raise ValidationError(_("he has a member number"))
+        else:
+            return self.partner_id.write({
+                'anggota_koprasi': True,
+                'no_anggota': no_anggota
+            })
+    # @api.model
+    # def create(self, vals):
+    #     print(vals)
+        # partners = self.env['res.partner'].sudo().search([('no_anggota','!=',''),('is_company','=',False)],order='no_anggota desc',limit=1)
+        # if vals['is_company'] == False and vals['anggota_koprasi'] == True:
+        #     vals['no_anggota'] = partners.no_anggota + 1
+        # return super(ResPartner, self).create(vals)
+
+    
