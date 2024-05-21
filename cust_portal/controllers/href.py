@@ -56,15 +56,19 @@ class PortalAccount(portal.CustomerPortal):
             # ('account_id', '=', (29))
             # ('date', '<', date_begin) 
             ])
+        loop = []
+        for lon in loann:
+            print(lon)
+            loop.append(lon.line_ids[0].payment_amount)
         
         if not loann : 
-            # loann = 0
-           
             loann = 0
         else:
             # loan = loann.line_ids
+            values = {"loann":loann}
+            
             loantotal = 0
-            for tes in loann: 
+            for tes in values.get('loann'): 
                 print(tes)
                 loantotal += tes.line_ids[0].payment_amount
                 # loan
@@ -83,7 +87,7 @@ class PortalAccount(portal.CustomerPortal):
             inv = 0
             invtotal = 0
         else:
-            values = {"invoicess":inv}
+            values = {"invoicess":inv,"loann":loann}
             # invtotal= (sum(inv.amount_untaxed for inv in values.get('invoicess')))
             invtotal= sum(values.get('invoicess').mapped('amount_untaxed'))
 
@@ -171,7 +175,7 @@ class PortalAccount(portal.CustomerPortal):
                     "simsuk":simsuk,
                     "simsukk":simsukk,
                     "totalinv":invtotal,
-                    # "loan":loan, 
+                    "loop":loop, 
                     "loantotal":loantotal,
                     "totalpotongan" : totalpotongan,
                     "simpoktotal":simpoktotal, 
@@ -185,9 +189,21 @@ class PortalAccount(portal.CustomerPortal):
                     'page_name' : 'rekap'      
         }
         
+        loan_bulan = request.env['account.move'].sudo().search([
+                                                    ('date', '<', date_begin),
+                                                    ('date', '>', date_pas),
+                                                    ('journal_id', '=', (10))])
+        if not loan_bulan : 
+            loan_bulan_tot = 0
+        else:
+            loan_bulan_tot= sum(loan_bulan.mapped('amount_total'))
+            loan = [loan_bulan.amount_total]
+
 
         filter  = {
-                    "loann" : loann.search([('date', '<', date_begin),('date', '>', date_pas)]), 
+                    "loop" : loan, 
+                    # "loop" : 
+                    "loantotal" : loan_bulan_tot,
                     "invoicess" : inv.search([('date', '<', date_begin),('date', '>', date_pas)]),
                     "simwab" : simwab.search([('date', '<', date_begin),('date', '>', date_pas)]),
                     "simsuk" : simsuk.search([('account_id', '=', (118)),('partner_id', '=', [partner.id]),('date', '<', date_begin),('date', '>', date_pas)]),
@@ -199,9 +215,12 @@ class PortalAccount(portal.CustomerPortal):
         
         
         if kw.get('filterr') == 'bulan_lalu':
+            
             values.update(filter)
+
             itung={
                 "totalinv" : sum(values.get('invoicess').mapped('amount_untaxed')),
+                # "loantotal" : values.get('loann').amount_total,
                 "simwabb" : values.get('simwab').amount_currency,
                 "simwabtotal" : sum(values.get('simwabdaftar').mapped('amount_currency')),
                 "simpoktotal" : sum(values.get('simpokdaftar').mapped('amount_currency')),

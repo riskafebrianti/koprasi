@@ -140,12 +140,13 @@
                                     <div class="col-sm-6">
                                         <div class="text-muted mb-0">
                                         <table>
-                                          <t t-foreach="loann" t-as="loop">
+                                          <t t-foreach="loop" t-as="loopp">
                                          
                                             <tr>
                                                 <td>
-                                                    <span t-field="loop.line_ids[0].payment_amount"/> 
-                                                    <!-- <span><em class="text-info fw-bolder">Pinjaman Ke</em> <t t-esc="loann.line_ids[0].sequence"/></span>  -->
+                                                    <!-- <span t-esc="loopp"/> -->
+                                                    <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(loopp))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                                     <!-- <span><em class="text-info fw-bolder">Pinjaman Ke</em> <t t-esc="loann.line_ids[0].sequence"/></span>  -->
                                                 </td>
                                             </tr>
                                         
