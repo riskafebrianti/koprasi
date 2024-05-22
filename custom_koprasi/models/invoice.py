@@ -19,16 +19,16 @@ class ResPartner(models.Model):
     noga = fields.Char('Nomor Anggota')
     no_anggota = fields.Integer('Nomor Anggota',tracking=1)
     anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1, default=False)
-    # add = fields.Many2one(comodel_name='account.move', string='Counter Account', tracking=1)
-    # add = fields.Integer('tessss')
+    
+    
     invoice_list = fields.One2many('account.move', 'commercial_partner_id',
                                 string="Invoice Details",
                                 readonly=True,
                                 domain=(
                                 [('payment_state', '=', 'not_paid'),
-                                ('move_type', '=', 'out_invoice'),
-                                ('date', '=', date_begin),
-                                ('date', '=', today)
+                                ('move_type', '=', ('out_invoice')),
+                                ('date', '>', date_begin),
+                                ('date', '<=', today)
                                 ]))
     
     _sql_constraints = [
@@ -73,6 +73,8 @@ class loan(models.Model):
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
     simwab = fields.Boolean(string='Entries Simwab')
+    
+    
     # add = fields.Many2one('res.partner', string='Order Reference')
     # add = fields.Many2one(comodel_name='res.partner', string='Counter Account', tracking=1, related='partner_id')
     # add = fields.Integer('tessss')
@@ -321,4 +323,7 @@ class ResUsers(models.Model):
         #     vals['no_anggota'] = partners.no_anggota + 1
         # return super(ResPartner, self).create(vals)
 
+
+
+    
     

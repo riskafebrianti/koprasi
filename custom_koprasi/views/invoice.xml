@@ -102,21 +102,17 @@
         </field>
     </record>
 
-    <!-- <record model="ir.ui.view" id="account_move_tree_new">
+    <record model="ir.ui.view" id="account_move_treee_newww">
         <field name="name">customer.statements.followup</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="base_accounting_kit.customer_statements_form_view"/>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
-        
-            <xpath expr="//page//field[@name='invoice_list']" position="inside">
-                <tree string="Invoices">
-                    
-                </tree>
-                
-            </xpath>
-        
+          <xpath expr="//tree//field[2]" position="after">
+                <field name="invoice_partner_display_name" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
+           </xpath> 
+          
         </field>
-    </record> -->
+    </record>
 
 </odoo>
 
