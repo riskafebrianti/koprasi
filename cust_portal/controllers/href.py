@@ -56,24 +56,25 @@ class PortalAccount(portal.CustomerPortal):
             # ('account_id', '=', (29))
             # ('date', '<', date_begin) 
             ])
-        loop = []
-        for lon in loann:
-            print(lon)
-            loop.append(lon.line_ids[0].payment_amount)
+  
         
         if not loann : 
             loann = 0
-        else:
-            # loan = loann.line_ids
-            values = {"loann":loann}
-            
             loantotal = 0
-            for tes in values.get('loann'): 
-                print(tes)
-                loantotal += tes.line_ids[0].payment_amount
+            loop = []
+        else:
+            loop = []
+            values = {"loann":loann}
+            for lon in values.get('loann'):
+                print(lon)
+                loop.append(lon.line_ids[0].payment_amount)
+
+                for tes in values.get('loann'): 
+                    print(tes)
+                    loantotal = tes.line_ids[0].payment_amount
                 # loan
             # loan 
-        print(loantotal)
+        
         
         inv = request.env['account.move'].search([
             ('state', '=', ('posted')),
