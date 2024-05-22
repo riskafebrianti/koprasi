@@ -323,7 +323,10 @@ class ResUsers(models.Model):
         #     vals['no_anggota'] = partners.no_anggota + 1
         # return super(ResPartner, self).create(vals)
 
+class ProductTemplate(models.Model):
+    _inherit = 'product.template'
 
+    available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=True)
 
     
     
