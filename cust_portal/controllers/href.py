@@ -65,13 +65,14 @@ class PortalAccount(portal.CustomerPortal):
         else:
             loop = []
             values = {"loann":loann}
-            for lon in values.get('loann'):
+            for lon in loann:
                 print(lon)
                 loop.append(lon.line_ids[0].payment_amount)
+                loantotal = sum(loop)
 
-                for tes in values.get('loann'): 
-                    print(tes)
-                    loantotal = tes.line_ids[0].payment_amount
+                # for tes in values.get('loann'): 
+                #     print(tes)
+                #     loantotal = tes.line_ids[0].payment_amount
                 # loan
             # loan 
         
@@ -190,12 +191,14 @@ class PortalAccount(portal.CustomerPortal):
                     'page_name' : 'rekap'      
         }
         
-        loan_bulan = request.env['account.move'].sudo().search([
+        loan_bulan = request.env['account.move'].search([
+                                                    ('partner_id', '=', [partner.id]),
                                                     ('date', '<', date_begin),
                                                     ('date', '>', date_pas),
                                                     ('journal_id', '=', (10))])
         if not loan_bulan : 
             loan_bulan_tot = 0
+            loan = []
         else:
             loan_bulan_tot= sum(loan_bulan.mapped('amount_total'))
             loan = [loan_bulan.amount_total]
