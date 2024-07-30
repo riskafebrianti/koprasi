@@ -24,11 +24,14 @@ class PortalAccount(portal.CustomerPortal):
     def portal_my_loan(self, **kw):
         
         partner = request.env.user.partner_id
-        today = datetime.now().strftime('%Y-%m-%d')
+        # today = datetime.now().strftime('%Y-%m-%d')
+        today = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), "%Y-%m-%d").date()
         # bulan lalu
         date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
+        date_beginn = datetime.strptime(date_begin, "%Y-%m-%d").date()
         # 2 bulan lalu
         date_pas = datetime.now().replace(datetime.now().year, datetime.now().month-2, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
+        date_pass = datetime.strptime(date_pas, "%Y-%m-%d").date()
         # filter = values.search([('date', '>', date_begin)])
        
         
@@ -50,7 +53,7 @@ class PortalAccount(portal.CustomerPortal):
         #     # for x in loan:
         #     pinjaman = pinjam.line_ids[0].payment_amount
         
-        loann = request.env['account.loan'].search([
+        loann = request.env['account.loan'].sudo().search([
             ('state', '=', ('posted')),
             ('partner_id', '=', [partner.id]),
             # ('account_id', '=', (29))
@@ -64,7 +67,7 @@ class PortalAccount(portal.CustomerPortal):
             loop = []
         else:
             loop = []
-            values = {"loann":loann}
+            
             for lon in loann:
                 print(lon)
                 loop.append(lon.line_ids[0].payment_amount)
@@ -76,120 +79,112 @@ class PortalAccount(portal.CustomerPortal):
                 # loan
             # loan 
         
-        
-        inv = request.env['account.move'].search([
-            ('state', '=', ('posted')),
-            ('partner_id', '=', [partner.id]),
-            ('journal_id', '=', (1)),
-            ('payment_state', '=', ('not_paid'))
+        values = {"loann":loann}
+        # inv = request.env['account.move'].search([
+        #     ('state', '=', ('posted')),
+        #     ('partner_id', '=', [partner.id]),
+        #     ('journal_id', '=', (1)),
+        #     ('payment_state', '=', ('not_paid'))
 
-            # ('date', '<', date_begin)
-            ])
+        #     # ('date', '<', date_begin)
+        #     ])
+# invoice POS
+        inv = request.env['pos.order'].sudo().search([
+                                                ('partner_id', '=', [partner.id]),
+                                                ('account_move.payment_state','=', ('not_paid')),
+                                                ('account_move.date', '<=', today),
+                                                ('account_move.date', '>=', date_begin)
+                                                ])
         if not inv : 
-            inv = 0
             invtotal = 0
         else:
-            values = {"invoicess":inv,"loann":loann}
-            # invtotal= (sum(inv.amount_untaxed for inv in values.get('invoicess')))
-            invtotal= sum(values.get('invoicess').mapped('amount_untaxed'))
+            values["invoicess"] = inv
+            invtotal= sum(values.get('invoicess').mapped('amount_total'))
 
-        simpokdaftar = request.env['account.move.line'].search([
+
+# simpanan pokok
+        simpokdaftar = request.env['account.move.line'].sudo().search([
             ('account_id.name', 'like', ('%Pokok')),
             ('partner_id', '=', [partner.id])
             ])
-        simpok = request.env['account.move.line'].search([
-            ('account_id.name', 'like', ('%Pokok')),
-            ('partner_id', '=', [partner.id]),
-            ('date', '<=', today),
-            ('date', '>=', date_begin)
-            ])
+        simpok = sum(simpokdaftar.filtered(lambda d: d.date < today and d.date >= date_beginn).mapped('amount_currency'))  
         
-        if not values.get('simpokdaftar') : 
-            simpokdaftar : 0
-            # simpok = 0
-            simpokk = 0
+        if not simpokdaftar :
+            simpok = 0
             simpoktotal = 0
 
         else:
-            values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar, "simpokdaftar":simpokdaftar, "simpok":simpok, "simsukdaftar":simsukdaftar, "simsuk":simsuk}
-            
-            simpokk = simpok.amount_currency
+            values["simpokdaftar"] = simpokdaftar
             simpoktotal = sum(values.get('simpokdaftar').mapped('amount_currency'))
-            # simsuk = simsuk[-1].move_id.amount_total_signed
 
             
 
-        simwab = request.env['account.move.line'].search([
-            ('account_id.name', 'like', ('%Wajib')),
-            ('partner_id', '=', [partner.id]),
-            ('date', '<', today),
-            ('date', '>=', date_begin)
-            
-            ])
-        simwabdaftar = request.env['account.move.line'].search([
+        simwabdaftar = request.env['account.move.line'].sudo().search([
             ('account_id.name', 'like', ('%Wajib')),
             ('partner_id', '=', [partner.id])
-            
-            ])
+            ])    
+        simwab = sum(simwabdaftar.filtered(lambda d: d.date < today and d.date >= date_beginn).mapped('amount_currency'))  
         if not simwabdaftar: 
-            # simwabdaftar = 0
-            # simwab = 0
-            simwabb = 0
+            simwab= 0
             simwabtotal = 0
         else:
-            values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar, "simpokdaftar":simpokdaftar, "simpok":simpok, "simsukdaftar":simsukdaftar, "simsuk":simsuk}
-            simwabb = simwab.amount_currency
+            values["simwabdaftar"] = simwabdaftar
             simwabtotal= sum(values.get('simwabdaftar').mapped('amount_currency'))
-            # values = {"invoicess":inv, "simwab":simwab, "simwabb":simwabb, "simwabtotal" : simwabtotal, "simwabdaftar" :simwabdaftar,}
+            
 
 
-        simsukdaftar = request.env['account.move.line'].search([
+        simsukdaftar = request.env['account.move.line'].sudo().search([
             ('account_id.name', 'like', ('%Sukarela')),
             ('partner_id', '=', [partner.id])
             ])
-        simsuk = request.env['account.move.line'].search([
-            ('account_id.name', 'like', ('%Sukarela')),
-            ('partner_id', '=', [partner.id]),
-            ('date', '<=', today),
-            ('date', '>=', date_begin)
-            ])
+        simsuk = sum(simsukdaftar.filtered(lambda d: d.date < today and d.date >= date_beginn).mapped('amount_currency'))  
         
         if not simsukdaftar : 
-            simsukdaftar : 0
-            # simsuk = 0
-            simsukk = 0
+            simsuk = 0
             simsuktotal = 0
 
         else:
-            values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar, "simsukdaftar":simsukdaftar, "simsuk":simsuk}
+            # values = {"invoicess":inv, "simwab":simwab, "simwabdaftar" :simwabdaftar, "simsukdaftar":simsukdaftar, "simsuk":simsuk}
             
-            simsukk = simsuk.amount_currency
+            values["simsukdaftar"] = simsukdaftar
             simsuktotal = sum(values.get('simsukdaftar').mapped('amount_currency'))
             # simsuk = simsuk[-1].move_id.amount_total_signed
 
-        totalpotongan = simpokk+simsukk+simwabb+invtotal+loantotal
-        values = {
-                    "invoicess":inv,  
-                    "simpok":simpok, 
-                    "loann":loann,
-                    "simwabb":simwabb, 
-                    "simwab":simwab, 
-                    "simsuk":simsuk,
-                    "simsukk":simsukk,
-                    "totalinv":invtotal,
-                    "loop":loop, 
-                    "loantotal":loantotal,
-                    "totalpotongan" : totalpotongan,
-                    "simpoktotal":simpoktotal, 
-                    "simwabtotal":simwabtotal, 
-                    "simsuktotal":simsuktotal,
-                    "simwabdaftar" :simwabdaftar,
-                    "simpokdaftar" :simpokdaftar,
-                    "simsukdaftar" :simsukdaftar,
-                    # "loannn" :loannn,
-                    "today":today,
-                    'page_name' : 'rekap'      
-        }
+        totalpotongan = simpok+simsuk+simwab+invtotal+loantotal
+
+        values.update({"simpok": simpok, 
+                       "simwab": simwab,
+                       "simsuk": simsuk,
+                       "totalinv": invtotal,
+                       "loop": loop,
+                       "loantotal": loantotal,
+                       "totalpotongan": totalpotongan,
+                       "simwabtotal": simwabtotal,
+                       "simsuktotal": simsuktotal,
+                       "simpoktotal": simpoktotal,
+                       "today":today,
+                        'page_name' : 'rekap'
+                    })
+        # values = {
+        #             "invoicess":inv,  
+        #             "simpok":simpok, 
+        #             "loann":loann,
+        #             "simwab":simwab, 
+        #             "simsuk":simsuk,
+        #             "totalinv":invtotal,
+        #             "loop":loop, 
+        #             "loantotal":loantotal,
+        #             "totalpotongan" : totalpotongan,
+        #             "simpoktotal":simpoktotal, 
+        #             "simwabtotal":simwabtotal, 
+        #             "simsuktotal":simsuktotal,
+        #             "simwabdaftar" :simwabdaftar,
+        #             "simpokdaftar" :simpokdaftar,
+        #             "simsukdaftar" :simsukdaftar,
+        #             # "loannn" :loannn,
+        #             "today":today,
+        #             'page_name' : 'rekap'      
+        # }
         
         loan_bulan = request.env['account.move'].search([
                                                     ('partner_id', '=', [partner.id]),
@@ -208,13 +203,15 @@ class PortalAccount(portal.CustomerPortal):
                     "loop" : loan, 
                     # "loop" : 
                     "loantotal" : loan_bulan_tot,
-                    "invoicess" : inv.search([('date', '<', date_begin),('date', '>', date_pas)]),
-                    "simwab" : simwab.search([('date', '<', date_begin),('date', '>', date_pas)]),
-                    "simsuk" : simsuk.search([('account_id', '=', (118)),('partner_id', '=', [partner.id]),('date', '<', date_begin),('date', '>', date_pas)]),
-                    "simsukdaftar" : simsukdaftar.search([('account_id', '=', (118)),('partner_id', '=', [partner.id]),('date', '<', date_begin)]),
-                    "simpok" : simpok.search([('account_id', '=', (116)),('partner_id', '=', [partner.id]),('date', '<', date_begin),('date', '>', date_pas)]),
-                    "simpokdaftar" : simpokdaftar.search([('account_id', '=', (116)),('partner_id', '=', [partner.id]),('date', '<', date_begin)]),
-                    "simwabdaftar" : simwabdaftar.search([('date', '<=', date_begin)]),
+                    "invoicess" : request.env['pos.order'].sudo().search([('account_move.date', '<', date_begin),('account_move.date', '>', date_pas),('partner_id', '=', [partner.id])]),
+                    # "invoicess" : inv.filtered(lambda d: d.account_move.date < date_beginn and d.account_move.date > date_pass),
+                    # "simwab" : simwabdaftar.filtered(lambda a: a.date < date_beginn and a.date > date_pass),
+                    "simwab" : sum(simwabdaftar.filtered(lambda a: a.date < date_beginn and a.date > date_pass).mapped('amount_currency'))  ,
+                    "simsuk" : simsukdaftar.filtered(lambda b: b.date < date_beginn and b.date > date_pass),
+                    "simsukdaftar" : simsukdaftar.filtered(lambda c: c.date < date_beginn and c.date > date_pass),
+                    "simpok" : simpokdaftar.filtered(lambda e: e.date < date_beginn and e.date > date_pass),
+                    "simpokdaftar" : simpokdaftar.filtered(lambda g: g.date < date_beginn and g.date > date_pass),
+                    "simwabdaftar" : simwabdaftar.filtered(lambda f: f.date <= date_beginn),
                     }
         
         
@@ -223,9 +220,9 @@ class PortalAccount(portal.CustomerPortal):
             values.update(filter)
 
             itung={
-                "totalinv" : sum(values.get('invoicess').mapped('amount_untaxed')),
+                "totalinv" : sum(values.get('invoicess').mapped('amount_total')),
                 # "loantotal" : values.get('loann').amount_total,
-                "simwabb" : values.get('simwab').amount_currency,
+                # "simwab" : values.get('simwab').amount_currency,
                 "simwabtotal" : sum(values.get('simwabdaftar').mapped('amount_currency')),
                 "simpoktotal" : sum(values.get('simpokdaftar').mapped('amount_currency')),
                 "simsuktotal" : sum(values.get('simsukdaftar').mapped('amount_currency'))
@@ -233,7 +230,7 @@ class PortalAccount(portal.CustomerPortal):
 
             }
             values.update(itung)
-            totalpotongan = values.get('simpok').amount_currency+values.get('simsuk').amount_currency+values.get('simwab').amount_currency+values.get('totalinv')+values.get('loantotal')
+            totalpotongan = values.get('simpok').amount_currency+values.get('simsuk').amount_currency+values.get('simwab')+values.get('totalinv')+values.get('loantotal')
             jumlah={
                 "totalpotongan" : totalpotongan
             }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_tagihan">
+        <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+            
+                     <t t-foreach="docs" t-as="x">
+        <div class="pages" style="width: 95%; border: 0px solid; height: 50%; margin-left:25px; margin-top:-60px; ">
+             <!-- <div class="page"> -->
+           
+                <!-- <div style="border:1px solid black; font-size:16px; float:right;">
+                    
+                        <tr>
+                            <td><span t-esc="docs.invoice_list[0].company_id.city"/>,</td>
+                            <td></td>
+                            <td><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %B %Y')"/></td>
+                        </tr>      
+                </div> -->
+
+                <div style="border:0px solid black; font-size:19px; float:left;">    
+                    <span style="font-family:Calibri; font-size:28px; color:black; font-weight: bold;"> Follow-up Report</span><br/>
+                    <span style="font-size:19px;"> Kepada : <span t-esc="docs.invoice_list[0].invoice_partner_display_name"/> </span><br/><br/>
+                    
+                </div>
+           
+             <table style="width:100%; border-collapse: collapse; border: 0px solid; ">
+
+                    <tr>
+                        <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:2%;">No</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:17%;">Nomor Invoice</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:13%;">Nomor PO</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:8%;">Tanggal Invoice</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:5%;">Jumlah</td>
+                        
+                        
+                        
+                    </tr>
+                            
+                <t t-set="no" t-value="1"/>
+                <!-- <t t-foreach="x.invoice_list" t-as="inv"> -->
+                <t t-foreach="x.invoice_list" t-as="inv">
+
+                    <tr>
+                        <td style="border: 1px solid; font-size:13px;text-align: center; color:black; padding:5px;"><span t-esc="no"/> </td>
+                        <!-- <td><span t-esc="inv.invoice_partner_display_name"/> </td> -->
+                        <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="inv.name"/> </td>
+                        <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="inv.ref"/> </td>
+                        <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="inv.invoice_date"/> </td>
+                        <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;">Rp.<span t-esc="'{0:,.2f}'.format(int(inv.amount_total_signed))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/> </td>
+                        
+                    
+               
+                <t t-set="no" t-value="no + 1"/>
+                </tr> 
+
+            </t>
+                
+                <b><td colspan="4" style="border: 0px solid; font-weight: bold; font-size:17px; text-align: center; color:black; padding:0px; width:5%; font-weight: bold;" >Total  </td></b>
+                <b><td style="border: 0px solid; font-size:17px; text-align: left; color:black; padding-right:12px; width:5%; font-weight: bold;">Rp <span t-esc="'{0:,.2f}'.format(int(sum(record.amount_total_signed for record in x.invoice_list)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></td></b>
+
+              
+    </table>
+             
+<br/>
+     
+            
+            <!-- <span style="border: 0px solid; font-family:Calibri; font-size:16px; text-align: center; color:black;; width:100%;" >Terbilang : <span t-esc="x.number_to_words(sum(record.amount_total_signed for record in x.invoice_list),x.currency_id)"/></span> -->
+<br/>
+<br/>
+          
+    </div>
+</t>
+</t>
+
+        </t>
+    </template>
+
+</odoo>

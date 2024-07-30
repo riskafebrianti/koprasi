@@ -10,10 +10,23 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
 
+    invoice_auto_check = fields.Boolean()
+
+class PosConfig(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    invoice_auto_check = fields.Boolean(
+        related="pos_config_id.invoice_auto_check",
+        help='Check to enable the invoice button',
+        readonly=False, store=True,
+        config_parameter='pos_invoice_automate.invoice_auto_check')
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    
     today = datetime.now().strftime('%Y-%m-%d')
     date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
     noga = fields.Char('Nomor Anggota')
