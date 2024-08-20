@@ -289,8 +289,8 @@ class AccountLoanLine(models.Model):
                 "account_id": (account and account.id)
                 or partner.property_account_payable_id.id,
                 "partner_id": partner.id,
-                "credit": self.payment_amount,
-                "debit": 0,
+                "credit": 0,
+                "debit": self.payment_amount,
             }
         )
         if self.interests_amount:

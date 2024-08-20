@@ -7,9 +7,14 @@
         <field name="arch" type="xml">
             <!-- Add your xpath here -->
             <field name="vat" position="after">
-                <field name="noga"></field> 
+                <!-- <field name="simla_anggota"></field>  -->
                 <field name="anggota_koprasi"/>
                 <field name="no_anggota" readonly="1" attrs="{'invisible': [('anggota_koprasi', '=', False)]}"/>
+                
+            </field>
+
+             <field name="function" position="before">
+                <field name="tabungan"></field>
             </field>
           
         </field>

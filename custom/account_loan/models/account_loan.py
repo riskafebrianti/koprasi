@@ -177,6 +177,7 @@ class AccountLoan(models.Model):
         "account.account",
         domain="[('company_id', '=', company_id)]",
         string="Short term account",
+        
         help="Account that will contain the pending amount on short term",
         required=True,
         readonly=True,

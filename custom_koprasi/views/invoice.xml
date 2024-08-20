@@ -96,7 +96,20 @@
         </field>
     </record>
 
+    <!-- <record model="ir.ui.view" id="nama_model_form">
+        <field name="name">nama.model.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nama_modul.nama_model_form"/>
+        <field name="arch" type="xml">
+            <field name="function" position="before">
+                <field name="tabungan"></field>
+            </field>
+        </field>
+    </record> -->
 
+ 
+    
+   
  
     <record model="ir.ui.view" id="view_move_form_inh">
         <field name="name">account.move.form</field>
@@ -107,13 +120,56 @@
                 <button string="Enter to All" name="action_custom_button" type="object" class="oe_highlight"/>
             </xpath> -->
             <xpath expr="//field[@name='ref']" position="after">
-                <field name="simwab"/>
+                <!-- <field name="simwab"/> -->
+                <field name="entri"/>
+                <field name="partneram" attrs="{'invisible': [('entri', '!=', 'simsu')]}" />
+                <!-- <field name="partner" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/> -->
+                <field name="amount_simsu" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/>
             </xpath>
             <xpath expr="//header//button[@name='action_post']" position="after">
-                <button name="load_simwab" string="Load Simwab Partner" type="object" attrs="{'invisible': [('simwab', '=', False)]}"/>
+                <!-- <button name="load_simwab" string="Load Simwab Partner" type="object" attrs="{'invisible': [('simwab', '=', False)]}"/> -->
+                <button name="load_simwab" string="Load Simwab Partner" type="object" attrs="{'invisible': [('entri', '!=', 'simwa')]}"/>
+                <button name="load_simsu" string="Load Simla Partner" type="object" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/>
+                <button name="fee_simla" string="Fee Simla Partner" type="object" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/>
+                <button name="pay_simla" string="Cash Out Simla Partner" type="object" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/>
+
+                <!-- <button name="load_simwab" string="Payment Simwab Partner" type="object" attrs="{'invisible': [('payment', '!=', 'pay_simwa')]}"/> -->
+                <!-- <button name="pay_simsu" string="Payment Simsu Partner" type="object" attrs="{'invisible': [('payment', '!=', 'pay_simsu')]}"/> -->
+                <!-- <button name="" string="Load simsu Partner" action="custom_koprasi.res_partner_wizard_id" type="action" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/> -->
+                
             </xpath>
         </field>
     </record>
+
+
+    <!-- <record id="res_partner_wizard_id" model="ir.actions.act_window">
+        <field name="name">account_move</field>
+        <field name="res_model">account.move</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.view_move_form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+
+    </record>
+
+    <record id="res_partner_wizard_view_id" model="ir.ui.view">
+        <field name="name">res_partner_wizard_view_id</field>
+        <field name="model">res_partner_wizard_id</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form string="Masukkan nama Karyawan">
+            <sheet>
+                <group col="4">
+                    <field name="partner"/>
+
+                </group>
+            </sheet>
+            <footer>
+                <button name="set_open" string="Submit" type="object" class="btn-primary"/>
+            </footer>
+        </form>
+        </field>
+    </record> -->
 
     <record model="ir.ui.view" id="inherit_account_account">
         <field name="name">account.account.form</field>
@@ -123,10 +179,12 @@
             <xpath expr="//field[@name='allowed_journal_ids']" position="after">
                 <field name="simpok"/>
                 <field name="simwab"/>
+                <field name="simsu"/>
             </xpath>
             <xpath expr="//field[@name='group_id']" position="after">
                 <field name="amount" attrs="{'invisible': [('simwab', '=', False),('simpok','=',False)]}"/>
-                <field name="counter_account" attrs="{'invisible':[('simpok','=',False),('simwab','=',False)]}"/>
+                <field name="counter_account" attrs="{'invisible':[('simpok','=',False),('simwab','=',False),('simsu','=',False)]}"/>
+                <field name="other_account" attrs="{'invisible':[('simsu','=',False)]}"/>
             </xpath>
         </field>
     </record>
@@ -138,6 +196,10 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="attributes">
                 <attribute name="domain">[('is_company', '=', False)]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="after">
+                <field name="info" width="100px"  optional="hide"/>
+                <field name="info_simwa"  width="150px" optional="hide" />
             </xpath>
         </field>
     </record>
@@ -154,5 +216,32 @@
         </field>
     </record>
 
+    
+    
+        <!-- Define the server action -->
+        <record id="action_custom_res_partner" model="ir.actions.server">
+            <field name="name">Process</field>
+            <field name="model_id" ref="account_loan.model_account_loan_line"/> <!-- Reference to the res.partner model -->
+            <field name="binding_model_id" ref="account_loan.model_account_loan_line"/> <!-- Binding to make it appear in "Actions" -->
+            <field name="state">code</field>
+            <field name="code">records.view_process_values()</field>
+              
+            
+        </record>
+
+        <record id="purchase_inherit_module_name" model="ir.ui.view">
+            <field name="name">purchase.order.view.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_unit']" position="before">
+                    <field name="total" width="150px" optional="hide"/>
+                </xpath>
+                
+            </field>
+        </record>
+
+ 
+   
 </odoo>
 

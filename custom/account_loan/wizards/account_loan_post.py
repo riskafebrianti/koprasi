@@ -81,7 +81,7 @@ class AccountLoanPost(models.TransientModel):
             "date": self.loan_id.start_date,
             "ref": self.loan_id.name,
             "journal_id": self.journal_id.id,
-            # "partner_id": self.loan_id.partner_id.id,
+            "partner_id": self.loan_id.partner_id.id,
             "line_ids": [Command.create(vals) for vals in self.move_line_vals()],
         }
 
