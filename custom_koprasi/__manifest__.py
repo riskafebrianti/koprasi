@@ -37,7 +37,9 @@
     'assets': {
         'point_of_sale.assets': [
             'custom_koprasi/static/src/js/PaymentScreen.js',
+            # 'custom_koprasi/static/src/js/producrscreen.js'
             'custom_koprasi/static/src/xml/pos.xml',
+            # 'custom_koprasi/static/src/xml/productconfig.xml',
         ],
     },
     # only loaded in demonstration mode

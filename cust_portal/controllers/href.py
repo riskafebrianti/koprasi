@@ -65,14 +65,13 @@ class PortalAccount(portal.CustomerPortal):
             loann = 0
             loantotal = 0
             loop = []
-        else:
-            loop = []
+        # else:
+        #     loop = []
             
-            for lon in loann:
-                
-                loop.append(lon.payment_amount)
-                loantotal = sum(loop)
-                print(lon)
+        # for lon in loann: 
+        #     loop.append(lon.payment_amount)
+        #     loantotal = sum(loop)
+        #     print(lon)
 
                 # for tes in values.get('loann'): 
                 #     print(tes)
@@ -146,7 +145,7 @@ class PortalAccount(portal.CustomerPortal):
             simsuktotal = 0
         else:
             values["simsukdaftar"] = simsukdaftar
-            simsuktotal = sum(values.get('simsukdaftar').mapped('amount_currency'))
+            simsuktotal = partner.tabungan
             
 
         totalpotongan = simpok+simsuk+simwab+invtotal+loantotal
@@ -198,11 +197,11 @@ class PortalAccount(portal.CustomerPortal):
 
             loan = []
             
-            for lon in loann:
+            # for lon in loann:
                 
-                loan.append(lon.payment_amount)
-                loan_bulan_tot = sum(loan)
-                print(lon)
+            #     loan.append(lon.payment_amount)
+            loan_bulan_tot = sum(loan)
+            #     print(lon)
 
             # loan_bulan_tot= sum(loan_bulan.mapped('payment_amount'))
             # loan = [loan_bulan.payment_amount]

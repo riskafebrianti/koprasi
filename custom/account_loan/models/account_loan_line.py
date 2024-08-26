@@ -454,7 +454,7 @@ class AccountLoanLine(models.Model):
             self._generate_invoice()
         else:
             self._generate_move()
-        return self.view_account_values()
+        # return self.view_account_values()
 
     def view_account_moves(self):
         self.ensure_one()

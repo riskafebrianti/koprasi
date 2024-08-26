@@ -139,7 +139,7 @@
                             <group>
                                 <group>
                                     <field name="journal_id" />
-                                    <field name="short_term_loan_account_id" context="{'default_short_term_loan_account_id': 1, }" />/>
+                                    <field name="short_term_loan_account_id"/>
                                     <field name="journal_type" invisible="1" />
                                 </group>
                                 <group>

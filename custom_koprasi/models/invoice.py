@@ -23,7 +23,7 @@ class PosConfig(models.TransientModel):
 class namePurchase(models.Model):
     _inherit = 'purchase.order.line'
     
-    total = fields.Float(string='Harga Global',store=True,)
+    total = fields.Float(string='Top Up Price',store=True,)
 
     @api.onchange('price_unit','total')
     def bagi(self):
@@ -103,7 +103,7 @@ class AccountMove(models.Model):
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         for record in self:
             line_data_simsu = ((0,0,{
-                # 'partner_id': record.id,
+                'partner_id': record.partneram.id,
                 'account_id': simsu_account.counter_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': self.amount_simsu,
@@ -111,7 +111,7 @@ class AccountMove(models.Model):
             }))
             line_ids.append(line_data_simsu)
             line_data_simsu = ((0,0,{
-                # 'partner_id': record.id,
+                'partner_id': record.partneram.id,
                 'account_id': simsu_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': 0,
@@ -127,9 +127,11 @@ class AccountMove(models.Model):
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         if not simsu_account:
             raise ValidationError(_("Simwab Account tidak ditemukan"))
+        if self.amount_simsu > self.partneram.tabungan:
+            raise ValidationError(_("Saldo Tidak Terpenuhi"))
         for record in self:
             line_data_simsu = ((0,0,{
-                'partner_id': self.partneram.id,
+                'partner_id': record.partneram.id,
                 'account_id': simsu_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': self.amount_simsu,
@@ -312,16 +314,50 @@ class accountloan(models.Model):
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
+
+
+    short_term_loan_account_id = fields.Many2one(
+        "account.account",
+        domain="[('company_id', '=', company_id)]",
+        string="Short term account",
+        help="Account that will contain the pending amount on short term",
+        required=True,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
     long_term_loan_account_id = fields.Many2one(
         "account.account",
-        string="Bank Account",
-        default=1,
+        string="Bank account",
         help="Account that will contain the pending amount on Long term",
         domain="[('company_id', '=', company_id)]",
         readonly=True,
         states={"draft": [("readonly", False)]},
     )
+    interest_expenses_account_id = fields.Many2one(
+        "account.account",
+        domain="[('company_id', '=', company_id)]",
+        string="Interests account",
+        help="Account where the interests will be assigned to",
+        required=True,
+        readonly=True,
+        states={"draft": [("readonly", False)]},
+    )
 
+    @api.onchange('partner_id','name')
+    def get_price(self):
+        if not self.long_term_loan_account_id:
+            self.long_term_loan_account_id = self.env['account.account'].search([('code','=','22110010')], limit=1).id
+        else:
+            self.long_term_loan_account_id 
+        if not self.short_term_loan_account_id:
+            self.short_term_loan_account_id= self.env['account.account'].search([('code','=','81100040')], limit=1).id
+        else :
+            self.short_term_loan_account_id
+        if not self.interest_expenses_account_id:
+            self.interest_expenses_account_id= self.env['account.account'].search([('code','=','81100010')], limit=1).id
+        else:
+            self.interest_expenses_account_id
+        
     def _compute_draft_lines(self):
         self.ensure_one()
         self.fixed_periods = self.periods
@@ -329,12 +365,12 @@ class accountloan(models.Model):
         self.line_ids.unlink()
         amount = self.loan_amount
         if self.start_date:
-            date = datetime.strptime(datetime.now().replace(datetime.now().year, datetime.now().month, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1), "%Y-%m-%d").date()
+            date = self.start_date
         else:
-            date = datetime.strptime(datetime.now().replace(datetime.now().year, datetime.now().month, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1), "%Y-%m-%d").date()
+            date = datetime.today().date()
         delta = relativedelta(months=self.method_period)
-        # if not self.payment_on_first_period:
-        #     date += delta
+        if not self.payment_on_first_period:
+            date += delta
         for i in range(1, self.periods + 1):
             line = self.env["account.loan.line"].create(
                 self._new_line_vals(i, date, amount)
@@ -344,39 +380,9 @@ class accountloan(models.Model):
             amount -= line.payment_amount - line.interests_amount
         if self.long_term_loan_account_id:
             self._check_long_term_principal_amount()
-    
-    # @api.model
-    # def _default_account_id(self):
-    #     loan_id = self.env.context.get("default_loan_id")
-    #     if loan_id:
-    #         loan = self.env["account.loan"].browse(loan_id)
-    #         if loan.is_leasing:
-    #             return loan.leased_asset_account_id.id
-    #         else:
-    #             return loan.partner_id.with_company(
-    #                 loan.company_id
-    #             ).property_account_receivable_id.id
-        
- 
 
-    # short_term_loan_account_id = fields.Many2one(
-    #     "account.account",
-    #     domain="[('company_id', '=', company_id)]",
-    #     string="Short term account",
-    #     help="Account that will contain the pending amount on short term",
-    #     required=True,
-    #     readonly=True,
-    #     states={"draft": [("readonly", False)]},
-    #     default=lambda r: r._default_account_id()
-    # )
-
-    # @api.model
-    # def _short_term_field(self):
-    #    return self.env['account.loan'].search([], limit=1).id
 class loanline(models.Model):
     _inherit = 'account.loan.line'
-
- 
 
     def _compute_interest(self):
         if self.loan_type == "fixed-annuity-begin":
@@ -488,15 +494,7 @@ class loanline(models.Model):
             return self.view_account_invoices()
         return self.view_account_moves()
 
-    def view_process_values(self):
-        """Computes the annuity and returns the result"""
-        # self.ensure_one()
-        for a in self:
-            if a.is_leasing:
-                a._generate_invoice()
-            else:
-                a._generate_move()
-        return a.view_account_values()
+
 
 
     def _move_line_vals(self, account=False):
@@ -604,5 +602,27 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=True)
+
+class PosConfig(models.Model):
+	_inherit = "pos.config"
+
+	restrict_zero_qty = fields.Boolean(string='Restrict Zero Quantity')
+
+
+class ResConfigSettings(models.TransientModel):
+	_inherit = 'res.config.settings'
+
+	pos_restrict_zero_qty = fields.Boolean(related="pos_config_id.restrict_zero_qty",readonly=False)
+
+
+class PosSession(models.Model):
+	_inherit = 'pos.session'
+
+	def _loader_params_product_product(self):
+		result = super()._loader_params_product_product()
+		result['search_params']['fields'].extend(['qty_available','type'])
+		return result
+
+
 
 
