@@ -126,27 +126,15 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <!-- <xpath expr="//form/header/button[1]" position="after">
-                <button string="Enter to All" name="action_custom_button" type="object" class="oe_highlight"/>
-            </xpath> -->
             <xpath expr="//field[@name='ref']" position="after">
-                <!-- <field name="simwab"/> -->
-                <!-- <field name="entri"/> -->
                 <field name="partneram" invisible="context.get('hide_partner', True)" />
-                <!-- <field name="partner" widget="many2many_tags" options="{'color_field': 'color'}" attrs="{'invisible': [('entri', '!=', 'simsu')]}"/> -->
                 <field name="amount_simsu" invisible="context.get('hide_amount_simsu', True)"/>
             </xpath>
             <xpath expr="//header//button[@name='action_post']" position="after">
-                <!-- <button name="load_simwab" string="Load Simwab Partner" type="object" attrs="{'invisible': [('simwab', '=', False)]}"/> -->
                 <button name="load_simwab" string="Load Simwab Partner" type="object" invisible="context.get('hide_load_simwab', True)"/>
                 <button name="load_simsu" string="Load Simla Partner" type="object" invisible="context.get('hide_load_simsu', True)"/>
                 <button name="fee_simla" string="Fee Simla Partner" type="object" invisible="context.get('hide_fee_simla', True)"/>
                 <button name="pay_simla" string="Cash Out Simla Partner" type="object" invisible="context.get('hide_pay_simla', True)"/>
-
-                <!-- <button name="load_simwab" string="Payment Simwab Partner" type="object" attrs="{'invisible': [('payment', '!=', 'pay_simwa')]}"/> -->
-                <!-- <button name="pay_simsu" string="Payment Simsu Partner" type="object" attrs="{'invisible': [('payment', '!=', 'pay_simsu')]}"/> -->
-                <!-- <button name="" string="Load simsu Partner" action="custom_koprasi.res_partner_wizard_id" type="action" /> -->
-                
             </xpath>
         </field>
     </record>
@@ -224,6 +212,17 @@
                                 'hide_pay_simla' : False}</field>  
     </record>
 
-   
+
+    <record model="ir.ui.view" id="loan_post">
+        <field name="name">account.loan.post.form</field>
+        <field name="model">account.loan.post</field>
+        <field name="inherit_id" ref="account_loan.account_loan_post_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="date"/>
+            </xpath>
+        </field>
+    </record>
+    
 </odoo>
 

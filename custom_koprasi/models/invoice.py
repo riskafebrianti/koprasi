@@ -179,22 +179,15 @@ class AccountMove(models.Model):
         print("aww")
 
     def fee_simla(self):
-
-
-        print(self)
-        # partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True),('no_anggota','>',0)])
         partners = self.env['res.partner'].sudo().search([('tabungan','>','0')])
         
         line_ids = []
-        # for bunga in partners:
-        #     total_bunga = (bunga.tabungan * 0.2) /100
-           
         simwab_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         if not simwab_account:
             raise ValidationError(_("Simwab Account tidak ditemukan"))
         
         for partner in partners:
-            total_bunga = (partner.tabungan * 0.2) /100
+            total_bunga = round((partner.tabungan * 0.2) /100)
             simla_line_data = ((0,0,{
                 'partner_id': partner.id,
                 'account_id': simwab_account.other_account.id,
@@ -222,6 +215,13 @@ class AccountMove(models.Model):
 
 class AccountLoanPost(models.TransientModel):
     _inherit = "account.loan.post"
+
+    
+    date = fields.Date(
+        string='Date',
+        default=fields.Date.context_today,
+    )
+    
 
     def move_line_vals(self):
         res = list()
@@ -273,7 +273,7 @@ class AccountLoanPost(models.TransientModel):
     def move_vals(self):
         return {
             "loan_id": self.loan_id.id,
-            "date": self.loan_id.start_date,
+            "date": self.date.strftime("%Y-%m-%d"),
             "ref": self.loan_id.name,
             "journal_id": self.journal_id.id,
             "partner_id": self.loan_id.partner_id.id,
@@ -345,6 +345,7 @@ class accountloan(models.Model):
 
     @api.onchange('partner_id','name')
     def get_price(self):
+        self.journal_id=self.env['account.journal'].search([('code','=','LOAN')], limit=1).id
         if not self.long_term_loan_account_id:
             self.long_term_loan_account_id = self.env['account.account'].search([('code','=','22110010')], limit=1).id
         else:
