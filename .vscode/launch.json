@@ -15,8 +15,8 @@
                 "--config=D:/odoo/KOPERASI/odoo.conf",
                 "-u custom_koprasi",
                 // "-u custom_koprasi",
-                // "--database=KOPERASI",
-                // "--update=custom_koprasi",
+                "--database=kopkop",
+                "--update=custom_koprasi",
                 // "-u cust_portal",
                 // "--update=cust_portal",
             ]

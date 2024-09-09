@@ -16,6 +16,11 @@
              <field name="function" position="before">
                 <field name="tabungan"></field>
             </field>
+
+             <field name="barcode" position="after">
+                <field name="limit"></field>
+                <field name="credit_limit"></field>
+            </field>
           
         </field>
     </record>

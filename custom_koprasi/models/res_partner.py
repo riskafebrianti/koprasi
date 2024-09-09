@@ -20,6 +20,15 @@ class ResPartner(models.Model):
         # default=0,
         store=True,
     )
+    limit = fields.Integer(
+        string='Limit Partner', 
+        default=1500000,
+        store=True,
+    )
+    credit_limit = fields.Integer(
+        string='Amount Spent this Month ', 
+        compute='compute_amount',
+    )
     
     invoice_list = fields.One2many('account.move', 'commercial_partner_id',
                                 string="Invoice Details",
@@ -45,6 +54,18 @@ class ResPartner(models.Model):
             order.debit =  (sum(simsu_account.filtered(lambda d: d.debit > 0).mapped('debit'))) 
             order.tabungan = order.credit - order.debit
             print(order)
+    
+    @api.depends('pos_order_ids.partner_id')
+    def compute_amount(self):
+        date_buka = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
+        date_tutup = datetime.now().replace(datetime.now().year, datetime.now().month, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
+        for record in self:
+            amount_pos = record.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),('payment_method_id','=',3),('payment_date','>',date_buka), ('payment_date','<=',date_tutup)])
+            record.credit_limit = sum(amount_pos.mapped('amount'))
+            
+    
+
+    
 
 class ResUsers(models.Model):
     _inherit = 'res.users'

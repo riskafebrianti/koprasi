@@ -31,12 +31,15 @@
         'views/report_tagihan.xml',
         'views/res.xml',
         'views/invoice.xml',
-        'views/res_users.xml'
+        'views/res_users.xml',
+        # 'views/pos.xml'
         # 'static/src/xml/uom.xml',
     ],
     'assets': {
         'point_of_sale.assets': [
-            'custom_koprasi/static/src/js/PaymentScreen.js',
+            # 'custom_koprasi/static/src/js/PaymentScreen.js',
+            'custom_koprasi/static/src/js/OrderReceipt.js',
+            'custom_koprasi/static/src/js/payment.js',
             # 'custom_koprasi/static/src/js/producrscreen.js'
             'custom_koprasi/static/src/xml/pos.xml',
             # 'custom_koprasi/static/src/xml/productconfig.xml',

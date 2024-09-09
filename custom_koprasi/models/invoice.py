@@ -36,6 +36,9 @@ class AccountMove(models.Model):
     
     def load_simsu(self):
         print(self)
+        journal = self.env['account.account'].sudo().search([('simsu','=',True)]).allowed_journal_ids
+        if journal :
+             self.journal_id = journal
         line_ids =[]
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         for record in self:
@@ -61,6 +64,9 @@ class AccountMove(models.Model):
 
     def pay_simla(self):
         print(self)
+        journal = self.env['account.account'].sudo().search([('simsu','=',True)]).allowed_journal_ids
+        if journal :
+             self.journal_id = journal
         line_ids =[]
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         if not simsu_account:
@@ -90,6 +96,10 @@ class AccountMove(models.Model):
     
     def load_simwab(self):
         print(self)
+        journal = self.env['account.account'].sudo().search([('simsu','=',True)]).allowed_journal_ids
+        if journal :
+             self.journal_id = journal
+
         # partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True),('no_anggota','>',0)])
         partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True)])
         line_ids = []
@@ -102,8 +112,8 @@ class AccountMove(models.Model):
                 'info': partner.tabungan,
                 'account_id': simwab_account.id,
                 'name': 'Simpanan Wajib '+datetime.today().strftime('%Y-%m'),
-                'debit': simwab_account.amount,
-                'credit':0,
+                'debit': 0,
+                'credit':simwab_account.amount,
             }))
             line_ids.append(line_data)
             line_data = ((0,0,{
@@ -111,8 +121,8 @@ class AccountMove(models.Model):
 
                 'account_id': simwab_account.counter_account.id,
                 'name': 'Simpanan Wajib '+datetime.today().strftime('%Y-%m'),
-                'debit': 0,
-                'credit':simwab_account.amount,
+                'debit': simwab_account.amount,
+                'credit':0,
             }))
             line_ids.append(line_data)
         if line_ids:
@@ -121,7 +131,9 @@ class AccountMove(models.Model):
 
     def fee_simla(self):
         partners = self.env['res.partner'].sudo().search([('tabungan','>','0')])
-        
+        journal = self.env['account.account'].sudo().search([('simsu','=',True)]).allowed_journal_ids
+        if journal :
+             self.journal_id = journal
         line_ids = []
         simwab_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         if not simwab_account:
@@ -131,6 +143,7 @@ class AccountMove(models.Model):
             total_bunga = round((partner.tabungan * 0.2) /100)
             simla_line_data = ((0,0,{
                 'partner_id': partner.id,
+                'info': partner.tabungan,
                 'account_id': simwab_account.other_account.id,
                 'name': 'Bunga Anggota '+datetime.today().strftime('%Y-%m'),
                 'debit': total_bunga,
@@ -153,10 +166,11 @@ class AccountMove(models.Model):
     def amountauto(self):
         if self.partneram:
             self.amount_simsu = self.partneram.tabungan
+            
 class MoveLine(models.Model):
     _inherit = 'account.move.line'
     
-    info = fields.Float(string= 'Simla Partner')
+    info = fields.Float(string= 'Simla Partner', store=True,)
     info_simwa = fields.Float(string= 'Simwab')
 
     @api.onchange('partner_id')
@@ -181,26 +195,7 @@ class MoveLine(models.Model):
 
 
 
-class PosConfig(models.Model):
-	_inherit = "pos.config"
-
-	restrict_zero_qty = fields.Boolean(string='Restrict Zero Quantity')
-
-
-class ResConfigSettings(models.TransientModel):
-	_inherit = 'res.config.settings'
-
-	pos_restrict_zero_qty = fields.Boolean(related="pos_config_id.restrict_zero_qty",readonly=False)
-
-
-class PosSession(models.Model):
-	_inherit = 'pos.session'
-
-	def _loader_params_product_product(self):
-		result = super()._loader_params_product_product()
-		result['search_params']['fields'].extend(['qty_available','type'])
-		return result
-     
+  
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 

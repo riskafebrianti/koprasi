@@ -167,7 +167,7 @@
             </xpath>
             <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="after">
                 <field name="info" width="100px"  optional="hide"/>
-                <field name="info_simwa"  width="150px" optional="hide" />
+            
             </xpath>
         </field>
     </record>
