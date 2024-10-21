@@ -30,14 +30,10 @@
         'views/followup.xml',
         'views/report_tagihan.xml',
         'views/res.xml',
-<<<<<<< HEAD
-        # 'views/invoice.xml',
-=======
         'views/invoice.xml',
         'views/res_users.xml',
         # 'views/pos.xml'
->>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
-        # 'static/src/xml/uom.xml',
+
     ],
     'assets': {
         'point_of_sale.assets': [

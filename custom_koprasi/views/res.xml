@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <!-- Add your xpath here -->
             <field name="vat" position="after">
-<<<<<<< HEAD
+<!-- <<<<<<< HEAD
                 <field name="noga"></field> 
                 
-=======
-                <!-- <field name="simla_anggota"></field>  -->
+======= -->
+                <field name="simla_anggota"></field> 
                 <field name="anggota_koprasi"/>
                 <field name="no_anggota" readonly="1" attrs="{'invisible': [('anggota_koprasi', '=', False)]}"/>
                 
@@ -24,7 +24,7 @@
              <field name="barcode" position="after">
                 <field name="limit"></field>
                 <field name="credit_limit"></field>
->>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
+
             </field>
           
         </field>
