@@ -29,7 +29,7 @@
         'views/templates.xml',
         'views/followup.xml',
         'views/res.xml',
-        'views/invoice.xml',
+        # 'views/invoice.xml',
         # 'static/src/xml/uom.xml',
     ],
     # only loaded in demonstration mode

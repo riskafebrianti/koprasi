@@ -73,14 +73,20 @@
                                 <ul class="list-group list-group-flush rounded-3">
                                 <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                                     
-                                    <p class="mb-0"><b>Lihat Juga</b><br/> </p>
-                                    <form action="/rekap/" method="get">
-                                        <select name="filterr">
-                                            <option value="bulan_ini">Bulan Sekarang</option>
-                                            <option value="bulan_lalu">Bulan Lalu</option>
+                                    
+                                   
+                                    <!-- <a class="mb-0" method="get" action="/rekap/" href="?filter=bulan_lalu" value="Apply Filter"><b>Lihat Juga</b><br/> </a> -->
+                                    <form action="/rekap/" method="get" style="width:100%; border: 0px solid black;" class="input-group">
+                                        <select name="filterr" class="form-select w-50">
+                                            <option selected="disabled" value="">Lihat Juga</option>
+                                            <option type="submit" value="bulan_ini">Bulan Sekarang</option>
+                                            <option type="submit" value="bulan_lalu">Bulan Lalu</option>
                                             
                                         </select>
-                                        <input type="submit" value="Apply Filter"/>
+                                         <div class="input-group-append">
+                                            <button class="btn btn-outline-primary" type="submit">Cari</button>
+                                        </div>
+
                                     </form>
                                 </li>
                             
@@ -181,7 +187,7 @@
                                         <p class="text-muted mb-0">Rp. -</p>
                                     </t>
                                     <t t-else="">
-                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpok))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpokk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                     </t>
                                     </div>
                                 </div>
@@ -195,7 +201,7 @@
                                             <p class="text-muted mb-0">Rp. -</p>
                                         </t>
                                         <t t-else="">
-                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwab))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwabb))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                         </t>
                                     </div>
                                 </div>
@@ -209,7 +215,7 @@
                                             <p class="text-muted mb-0">Rp. -</p>
                                         </t>
                                         <t t-else="">
-                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsuk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsukk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                         </t>
                                     </div>
                                 </div>
