@@ -1,4 +1,4 @@
-from odoo import Command, _, api, fields, models
+from odoo import Command, _, api, fields, models, ValidationError
 from odoo.exceptions import UserError
 import math
 import logging
@@ -8,32 +8,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-<<<<<<< HEAD
-
-
-class NamaModel(models.Model):
-    _inherit = 'res.partner'
-
-    noga = fields.Char('Nomor Anggota')
-    
-# class company(models.Model):
-#     _inherit = 'account.move'
-
-#     # company = fields.Char('Company')
-    
-#     # partner_id = fields.Char('partner id', related='loan_id.partner_id.name')
-    
-#     # custt = fields.Char('Customerr', related ='loan_id.partner_id.name')
-
-    # @api.depends('quantity', 'price')
-    # def all_partner_id(self):
-        # self.price_total = self.quantity * self.price
-    
-
-
-
-class loan(models.Model):
-=======
 class Account(models.Model):
     _inherit = 'account.account'
     simpok = fields.Boolean('Simpok', tracking=1)
@@ -43,14 +17,11 @@ class Account(models.Model):
     counter_account = fields.Many2one(comodel_name='account.account', string='Counter Account', tracking=1)
     other_account = fields.Many2one(comodel_name='account.account', string='Other Account', tracking=1)
 class AccountMove(models.Model):
->>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
     _inherit = 'account.move'
 
     custtt = fields.Char('Customer', related='line_ids.partner_id.display_name',)
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
-<<<<<<< HEAD
-=======
     entri = fields.Selection([
         ('simwa', 'Simpanan Wajib'),
         ('simsu', 'Simpanan Sukarela'),
@@ -157,7 +128,6 @@ class AccountMove(models.Model):
         if line_ids:
             self.write({'line_ids': line_ids})
         print("aww")
->>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
 
     def fee_simla(self):
         partners = self.env['res.partner'].sudo().search([('tabungan','>','0')])
