@@ -33,9 +33,15 @@ class ResPartner(models.Model):
                                    readonly=True,
                                    domain=(
                                    [('payment_state', '=', 'not_paid'),
+<<<<<<< HEAD
                                     ('move_type', '=', 'out_invoice'),
                                     ('state', '=', 'posted')]))
     # add = fields.Char('namanya', related='partner_id.name')
+=======
+                                    ('move_type', '=', 'out_invoice')]))
+    
+    
+>>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
     total_due = fields.Monetary(compute='_compute_for_followup', store=False,
                                 readonly=True)
     next_reminder_date = fields.Date(compute='_compute_for_followup',

@@ -17,7 +17,7 @@
     # Check https://github.com/odoo/odoo/blob/16.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '0.',
 
     # any module necessary for this one to work correctly
     'depends': ['base','sale','point_of_sale'],
@@ -28,10 +28,27 @@
         'views/views.xml',
         'views/templates.xml',
         'views/followup.xml',
+        'views/report_tagihan.xml',
         'views/res.xml',
+<<<<<<< HEAD
         # 'views/invoice.xml',
+=======
+        'views/invoice.xml',
+        'views/res_users.xml',
+        # 'views/pos.xml'
+>>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
         # 'static/src/xml/uom.xml',
     ],
+    'assets': {
+        'point_of_sale.assets': [
+            # 'custom_koprasi/static/src/js/PaymentScreen.js',
+            'custom_koprasi/static/src/js/OrderReceipt.js',
+            'custom_koprasi/static/src/js/payment.js',
+            # 'custom_koprasi/static/src/js/producrscreen.js'
+            'custom_koprasi/static/src/xml/pos.xml',
+            # 'custom_koprasi/static/src/xml/productconfig.xml',
+        ],
+    },
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',

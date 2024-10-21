@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+         <record id="res_config_settings_view_form" model="ir.ui.view">
+        <!--        inherit res_config_settings for adding invoice operation methods-->
+        <field name="name">res.config.settings.form.view.inherited</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id"
+               ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pos_bills_and_receipts_section']"
+                   position='after'>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="automate_check_invoice">
+                        <div class="o_setting_left_pane">
+                            <field name="invoice_auto_check"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="invoice_auto_check">Auto Check Invoice
+                                Button
+                            </label>
+                            <div class="text-muted">
+                                Auto check the invoice button
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="automate_invoice"
+                         class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Button Operation</span>
+                            <div class="text-muted">
+                                Invoice button operation
+                            </div>
+                            <div class="content-group mt16">
+                                <field name="button_operation"/>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </xpath>
+        </field>
+    </record>
     <!-- <data>
         <record model="ir.ui.view" id="account_move_tree">
             <field name="name">account.move.tree</field>
@@ -13,19 +54,16 @@
         </record>
     </data> -->
 
-    <record id="inherit_view_sales_new" model="ir.ui.view">
+    <!-- <record id="inherit_view_sales_new_company" model="ir.ui.view">
         <field name="name">account.move</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_out_invoice_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="company"></field>
-                <!-- <field name="partner_id"></field> -->
-                <!-- <field name="cust"></field> -->
-                                
+                <field name="company"></field>                 
             </field>
         </field>
-    </record>
+    </record> -->
 
     <record id="inherit_view_sales_new" model="ir.ui.view">
         <field name="name">account.move</field>
@@ -37,11 +75,14 @@
                 <!-- <field name="cust"></field> -->
                                 
             </field>
+             <!-- <field name="partner_id" position="after">
+                <field name="add"></field>                                
+            </field> -->
             
         </field>
     </record>
 
-    <record id="inherit_view_sales_new" model="ir.ui.view">
+    <record id="inherit_view_sales_neww" model="ir.ui.view">
         <field name="name">account.loan</field>
         <field name="model">account.loan</field>
         <field name="inherit_id" ref="account_loan.account_loan_form"/>
@@ -54,7 +95,33 @@
             
         </field>
     </record>
+
+    <!-- <record model="ir.ui.view" id="nama_model_form">
+        <field name="name">nama.model.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="nama_modul.nama_model_form"/>
+        <field name="arch" type="xml">
+            <field name="function" position="before">
+                <field name="tabungan"></field>
+            </field>
+        </field>
+    </record> -->
+
+        <record id="purchase_inherit_module_name" model="ir.ui.view">
+            <field name="name">purchase.order.view.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_unit']" position="before">
+                    <field name="total" width="150px" optional="hide"/>
+                </xpath>
+                
+            </field>
+        </record>
+    
+   
  
+<<<<<<< HEAD
             <!-- <record model="ir.ui.view" id="view_move_form">
                 <field name="name">account.move.form</field>
                 <field name="model">account.move</field>
@@ -65,9 +132,123 @@
                     </xpath>
                 </field>
             </record> -->
+=======
+    <record model="ir.ui.view" id="view_move_form_inh">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="partneram" invisible="context.get('hide_partner', True)" />
+                <field name="amount_simsu" invisible="context.get('hide_amount_simsu', True)"/>
+            </xpath>
+            <xpath expr="//header//button[@name='action_post']" position="after">
+                <button name="load_simwab" string="Load Simwab Partner" type="object" invisible="context.get('hide_load_simwab', True)"/>
+                <button name="load_simsu" string="Load Simla Partner" type="object" invisible="context.get('hide_load_simsu', True)"/>
+                <button name="fee_simla" string="Fee Simla Partner" type="object" invisible="context.get('hide_fee_simla', True)"/>
+                <button name="pay_simla" string="Cash Out Simla Partner" type="object" invisible="context.get('hide_pay_simla', True)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherit_account_account">
+        <field name="name">account.account.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allowed_journal_ids']" position="after">
+                <field name="simpok"/>
+                <field name="simwab"/>
+                <field name="simsu"/>
+            </xpath>
+            <xpath expr="//field[@name='group_id']" position="after">
+                <field name="amount" attrs="{'invisible': [('simwab', '=', False),('simpok','=',False)]}"/>
+                <field name="counter_account" attrs="{'invisible':[('simpok','=',False),('simwab','=',False),('simsu','=',False)]}"/>
+                <field name="other_account" attrs="{'invisible':[('simsu','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+>>>>>>> ce02dfa4dbba93fd0289fdcc1b1bf0fb476e82b4
      
+    <record model="ir.ui.view" id="account_move_attr_kode_trans">
+        <field name="name">account.move</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">[('is_company', '=', False)]</attribute>
+            </xpath>
+            <xpath expr="//page[@name='aml_tab']//field[@name='line_ids']//tree//field[@name='partner_id']" position="after">
+                <field name="info" width="100px"  optional="hide"/>
+            
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_move_treee_newww">
+        <field name="name">customer.statements.followup</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+          <xpath expr="//tree//field[2]" position="after">
+                <field name="invoice_partner_display_name" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
+           </xpath> 
+          
+        </field>
+    </record>
+    <menuitem name="Simpanan Wajib" id="custom_koprasi.menu_1_list" parent="account.menu_finance_receivables" sequence="1"
+        action="custom_koprasi.nama_model_action"/>
+
+    <menuitem name="Simpanan Sukarela" id="custom_koprasi.menu_2_list" parent="account.menu_finance_receivables" sequence="1"
+        action="custom_koprasi.nama_model_action_simla"/>
+
+    <record id="nama_model_action" model="ir.actions.act_window">
+        <field name="name">Nama Model</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'hide_partner': True, 
+                                'hide_amount_simsu' : True, 
+                                'hide_load_simsu' : True, 
+                                'hide_fee_simla' : True, 
+                                'hide_load_simwab' : False,
+                                'hide_pay_simla' : True}</field>  
+    </record>
+
+    <record id="nama_model_action_simla" model="ir.actions.act_window">
+        <field name="name">simpananla</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">form,tree,kanban</field>
+        <field name="context">{'hide_partner': False, 
+                                'hide_amount_simsu' : False, 
+                                'hide_load_simsu' : False, 
+                                'hide_fee_simla' : False, 
+                                'hide_pay_simla' : False}</field>  
+    </record>
 
 
+    <record model="ir.ui.view" id="loan_post">
+        <field name="name">account.loan.post.form</field>
+        <field name="model">account.loan.post</field>
+        <field name="inherit_id" ref="account_loan.account_loan_post_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="date"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="nama_model_form">
+        <field name="name">product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_po_id']" position="after">
+                <field name="digital"/>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>
 
+
+  
