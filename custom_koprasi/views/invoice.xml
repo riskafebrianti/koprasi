@@ -14,12 +14,12 @@
                     <div class="col-12 col-lg-6 o_setting_box"
                          id="automate_check_invoice">
                         <div class="o_setting_left_pane">
-                            <field name="invoice_auto_check"/>
+                            <!-- <field name="invoice_auto_check"/> -->
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="invoice_auto_check">Auto Check Invoice
+                            <!-- <label for="invoice_auto_check">Auto Check Invoice
                                 Button
-                            </label>
+                            </label> -->
                             <div class="text-muted">
                                 Auto check the invoice button
                             </div>
@@ -183,11 +183,11 @@
           
         </field>
     </record>
-    <menuitem name="Simpanan Wajib" id="custom_koprasi.menu_1_list" parent="account.menu_finance_receivables" sequence="1"
+    <!-- <menuitem name="Simpanan Wajib" id="custom_koprasi.menu_1_list" parent="account.menu_finance_receivables" sequence="1"
         action="custom_koprasi.nama_model_action"/>
 
     <menuitem name="Simpanan Sukarela" id="custom_koprasi.menu_2_list" parent="account.menu_finance_receivables" sequence="1"
-        action="custom_koprasi.nama_model_action_simla"/>
+        action="custom_koprasi.nama_model_action_simla"/> -->
 
     <record id="nama_model_action" model="ir.actions.act_window">
         <field name="name">Nama Model</field>

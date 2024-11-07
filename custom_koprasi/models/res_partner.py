@@ -14,6 +14,7 @@ class ResPartner(models.Model):
     simla_anggota = fields.One2many("account.move.line",'partner_id') 
     no_anggota = fields.Integer('Nomor Anggota',tracking=1)
     anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1, default=False)
+    
     tabungan = fields.Integer(
         string='Tabungan Simpanan Sukarela', 
         compute='_compute_simla',
