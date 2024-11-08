@@ -28,14 +28,15 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    invoice_list = fields.One2many('account.move', 'partner_id',
+    invoice_list = fields.One2many('account.move', 'commercial_partner_id',
                                    string="Invoice Details",
                                    readonly=True,
                                    domain=(
                                    [('payment_state', '=', 'not_paid'),
-                                    ('move_type', '=', 'out_invoice')]))
-    
-    
+                                    ('move_type', '=', 'out_invoice'),
+                                    ('state', '=', 'posted')]))
+    # add = fields.Char('namanya', related='partner_id.name')
+
     total_due = fields.Monetary(compute='_compute_for_followup', store=False,
                                 readonly=True)
     next_reminder_date = fields.Date(compute='_compute_for_followup',

@@ -1,5 +1,6 @@
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import UserError,ValidationError
+from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 import math
 import logging
 import math

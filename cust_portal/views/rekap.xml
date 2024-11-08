@@ -214,7 +214,7 @@
                                         <p class="text-muted mb-0">Rp. -</p>
                                     </t>
                                     <t t-else="">
-                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpok))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                        <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simpokk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                     </t>
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@
                                             <p class="text-muted mb-0">Rp. -</p>
                                         </t>
                                         <t t-else="">
-                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwab))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simwabb))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                         </t>
                                     </div>
                                 </div>
@@ -242,7 +242,7 @@
                                             <p class="text-muted mb-0">Rp. -</p>
                                         </t>
                                         <t t-else="">
-                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsuk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
+                                            <p class="text-muted mb-0">Rp. <t t-esc="'{0:,.2f}'.format(int(simsukk))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/></p>
                                         </t>
                                     </div>
                                 </div>

@@ -33,7 +33,7 @@
         'views/invoice.xml',
         'views/res_users.xml',
         # 'views/pos.xml'
-        # 'static/src/xml/uom.xml',
+
     ],
     'assets': {
         'point_of_sale.assets': [

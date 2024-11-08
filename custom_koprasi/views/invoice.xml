@@ -121,6 +121,7 @@
     
    
  
+
     <record model="ir.ui.view" id="view_move_form_inh">
         <field name="name">account.move.form</field>
         <field name="model">account.move</field>
@@ -156,6 +157,7 @@
             </xpath>
         </field>
     </record>
+
      
     <record model="ir.ui.view" id="account_move_attr_kode_trans">
         <field name="name">account.move</field>
