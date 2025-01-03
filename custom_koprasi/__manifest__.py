@@ -20,7 +20,7 @@
     'version': '0.',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale','point_of_sale'],
+    'depends': ['base','account','point_of_sale','sale','purchase','website'],
 
     # always loaded
     'data': [
@@ -32,6 +32,7 @@
         'views/res.xml',
         'views/invoice.xml',
         'views/res_users.xml',
+        'views/website.xml',
         # 'views/pos.xml'
         # 'static/src/xml/uom.xml',
     ],
