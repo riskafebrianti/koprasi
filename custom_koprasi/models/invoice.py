@@ -16,6 +16,7 @@ class Account(models.Model):
     amount = fields.Float(string='Amount', tracking=1)
     counter_account = fields.Many2one(comodel_name='account.account', string='Counter Account', tracking=1)
     other_account = fields.Many2one(comodel_name='account.account', string='Other Account', tracking=1)
+    
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -196,18 +197,18 @@ class MoveLine(models.Model):
 
 
   
-class PosConfig(models.Model):
+class PossConfig(models.Model):
     _inherit = 'pos.config'
 
-    invoice_auto_check = fields.Boolean()
-class PosConfig(models.TransientModel):
-    _inherit = 'res.config.settings'
+    # invoice_auto_check = fields.Boolean()
+# class PosConfig(models.TransientModel):
+#     _inherit = 'res.config.settings'
 
-    invoice_auto_check = fields.Boolean(
-        related="pos_config_id.invoice_auto_check",
-        help='Check to enable the invoice button',
-        readonly=False, store=True,
-        config_parameter='pos_invoice_automate.invoice_auto_check')
+#     invoice_auto_check = fields.Boolean(
+#         related="pos_config_id.invoice_auto_check",
+#         help='Check to enable the invoice button',
+#         readonly=False, store=True,
+#         config_parameter='pos_invoice_automate.invoice_auto_check')
 
 
 
