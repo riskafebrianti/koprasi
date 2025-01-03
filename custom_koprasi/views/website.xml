@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- <template id="custom_website_button" inherit_id="website.placeholder_header_call_to_action">
+        <xpath expr="//header" position="replace">
+          <i class="fa-brands fa-whatsapp"></i>
+        </xpath>
+    </template> -->
+
+    <template id="inherit_header_call_to_action" inherit_id="website.header_call_to_action">
+        <xpath expr="//div[@class='container']" position="inside">
+            <a href="https://wa.me/6281251711115" target="_blank" class="btn btn-success btn_cta">
+                <i class="fa fa-whatsapp cy-icon"></i> Whatsapp 
+            </a>
+        </xpath>
+    </template>
+</odoo>
