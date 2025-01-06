@@ -34,7 +34,7 @@
         'views/res_users.xml',
         'views/website.xml',
         # 'views/pos.xml'
-        # 'static/src/xml/uom.xml',
+        # ' static/src/xml/uom.xml',
     ],
     'assets': {
         'point_of_sale.assets': [
