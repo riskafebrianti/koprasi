@@ -20,7 +20,7 @@
     'version': '0.',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','account','point_of_sale','sale','purchase','website'],
+    'depends': ['base','contacts','account','point_of_sale','sale','purchase','website','account_loan','pos_multi_uom_price','bi_pos_restrict_zero_qty','base_accounting_kit','pos_access_right_hr'],
 
     # always loaded
     'data': [

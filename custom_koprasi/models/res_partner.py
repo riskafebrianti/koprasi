@@ -26,6 +26,10 @@ class ResPartner(models.Model):
         default=1500000,
         store=True,
     )
+    badan_hukum = fields.Selection(
+        string='tes', store=True,
+        selection=[('PT', 'PT'), ('UD', 'UD'), ('CV', 'CV'), ('KOPRASI', 'KOPRASI'), ('YAYASAN', 'YAYASAN')]
+    )
     credit_limit = fields.Integer(
         string='Amount Spent this Month ', 
         compute='compute_amount',

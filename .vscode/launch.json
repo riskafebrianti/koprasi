@@ -9,14 +9,14 @@
             "type": "debugpy",
             "request": "launch",
             "python": "C:/Program Files/Python310/python.exe",
-            "program": "D:/odoo/KOPERASI/odoo-bin",
+            "program": "D:/odoo/odoo/KOPERASI/odoo-bin",
             // "console": "integratedTerminal"
             "args": [
-                "--config=D:/odoo/KOPERASI/odoo.conf",
-                "-u custom_koprasi",
+                "--config=D:/odoo/odoo/KOPERASI/odoo.conf",
                 // "-u custom_koprasi",
-                "--database=kopkop",
-                "--update=custom_koprasi",
+                // "-u custom_koprasi",
+                // "--database=kopkop",
+                // "--update=custom_koprasi",
                 // "-u cust_portal",
                 // "--update=cust_portal",
             ]

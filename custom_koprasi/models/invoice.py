@@ -28,7 +28,10 @@ class AccountMove(models.Model):
         ('simsu', 'Simpanan Sukarela'),
     ], string='Simpanan')
     
-    partneram = fields.Many2one('res.partner', string='Karyawan')
+    # partneram = fields.Many2one('res.partner', string='Karyawan')
+    partneram = fields.Many2many('res.partner',
+                                            string="Karyawan",
+                                           )
     # simla_anggota = fields.One2many("account.move.line",'partner_id') 
 
     simwab = fields.Boolean(string='Entries Simwab')
@@ -42,10 +45,10 @@ class AccountMove(models.Model):
              self.journal_id = journal
         line_ids =[]
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
-        for record in self:
+        for record in self.partneram:
             line_data_simsu = ((0,0,{
-                'partner_id': record.partneram.id,
-                'info': record.partneram.tabungan,
+                'partner_id': record.id,
+                'info': record.tabungan,
                 'account_id': simsu_account.counter_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': self.amount_simsu,
@@ -53,7 +56,7 @@ class AccountMove(models.Model):
             }))
             line_ids.append(line_data_simsu)
             line_data_simsu = ((0,0,{
-                'partner_id': record.partneram.id,
+                'partner_id': record.id,
                 'account_id': simsu_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': 0,
@@ -72,12 +75,13 @@ class AccountMove(models.Model):
         simsu_account = self.env['account.account'].sudo().search([('simsu','=',True)])
         if not simsu_account:
             raise ValidationError(_("Simwab Account tidak ditemukan"))
-        if self.amount_simsu > self.partneram.tabungan:
-            raise ValidationError(_("Saldo Tidak Terpenuhi"))
-        for record in self:
+        for data in self.partneram:
+            if self.amount_simsu > data.tabungan:
+                raise ValidationError(_(f"Saldo {data.name} Tidak Terpenuhi"))
+        for record in self.partneram:
             line_data_simsu = ((0,0,{
-                'partner_id': record.partneram.id,
-                'info': record.partneram.tabungan,
+                'partner_id': record.id,
+                'info': record.tabungan,
                 'account_id': simsu_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': self.amount_simsu,
@@ -85,7 +89,7 @@ class AccountMove(models.Model):
             }))
             line_ids.append(line_data_simsu)
             line_data_simsu = ((0,0,{
-                'partner_id': record.partneram.id,
+                'partner_id': record.id,
                 'account_id': simsu_account.counter_account.id,
                 'name': 'Simpanan Sukarela '+datetime.today().strftime('%Y-%m'),
                 'debit': 0,
@@ -97,27 +101,31 @@ class AccountMove(models.Model):
     
     def load_simwab(self):
         print(self)
-        journal = self.env['account.account'].sudo().search([('simsu','=',True)]).allowed_journal_ids
+        journal = self.env['account.account'].sudo().search([('simwab','=',True)]).allowed_journal_ids
         if journal :
              self.journal_id = journal
+        if not journal:
+             raise ValidationError(_("jurnal di CoA tidak ditemukan"))
 
         # partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True),('no_anggota','>',0)])
-        partners = self.env['res.partner'].sudo().search([('is_company','=',False),('active','=',True),('anggota_koprasi','=',True)])
+        partners = self.env['res.partner'].sudo().search([('active','=',True),('anggota_koprasi','=',True)])
         line_ids = []
         simwab_account = self.env['account.account'].sudo().search([('simwab','=',True)])
         if not simwab_account:
             raise ValidationError(_("Simwab Account tidak ditemukan"))
+        if not simwab_account.counter_account:
+            raise ValidationError(_("lawan Simwab Tidak ditemukan"))
         for partner in partners:
             line_data = ((0,0,{
                 'partner_id': partner.id,
-                'info': partner.tabungan,
+                # 'info': partner.tabungan,
                 'account_id': simwab_account.id,
                 'name': 'Simpanan Wajib '+datetime.today().strftime('%Y-%m'),
                 'debit': 0,
                 'credit':simwab_account.amount,
             }))
             line_ids.append(line_data)
-            line_data = ((0,0,{
+            line_dataa = ((0,0,{
                 'partner_id': partner.id,
 
                 'account_id': simwab_account.counter_account.id,
@@ -125,7 +133,7 @@ class AccountMove(models.Model):
                 'debit': simwab_account.amount,
                 'credit':0,
             }))
-            line_ids.append(line_data)
+            line_ids.append(line_dataa)
         if line_ids:
             self.write({'line_ids': line_ids})
         print("aww")
@@ -163,10 +171,10 @@ class AccountMove(models.Model):
         if line_ids:
             self.write({'line_ids': line_ids})
 
-    @api.onchange('partneram')
-    def amountauto(self):
-        if self.partneram:
-            self.amount_simsu = self.partneram.tabungan
+    # @api.onchange('partneram')
+    # def amountauto(self):
+    #     if self.partneram:
+    #         self.amount_simsu = self.partneram.tabungan
             
 class MoveLine(models.Model):
     _inherit = 'account.move.line'
