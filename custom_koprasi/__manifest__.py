@@ -20,7 +20,7 @@
     'version': '0.',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts','account','point_of_sale','sale','purchase','website','account_loan','pos_multi_uom_price','bi_pos_restrict_zero_qty','base_accounting_kit','pos_access_right_hr'],
+    'depends': ['base','point_of_sale','sale','purchase','website',],
 
     # always loaded
     'data': [
@@ -33,6 +33,7 @@
         'views/invoice.xml',
         'views/res_users.xml',
         'views/website.xml',
+        # 'views/assets.xml',
         # 'views/pos.xml'
         # ' stazstic/src/xml/uom.xml',
     ],
@@ -41,8 +42,10 @@
             # 'custom_koprasi/static/src/js/PaymentScreen.js',
             'custom_koprasi/static/src/js/OrderReceipt.js',
             'custom_koprasi/static/src/js/payment.js',
+            # 'custom_koprasi/static/src/js/disablee.js',
             # 'custom_koprasi/static/src/js/producrscreen.js'
             'custom_koprasi/static/src/xml/pos.xml',
+            'custom_koprasi/static/src/xml/disablee.xml',
             # 'custom_koprasi/static/src/xml/productconfig.xml',
         ],
     },
