@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     
+    # approval = fields.Selection([("koprasi","Koperasi"),("manager","Manager")], string='Approval')
     today = datetime.now().strftime('%Y-%m-%d')
     date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1)
     simla_anggota = fields.One2many("account.move.line",'partner_id') 
@@ -27,8 +28,8 @@ class ResPartner(models.Model):
         store=True,
     )
     badan_hukum = fields.Selection(
-        string='tes', store=True,
-        selection=[('PT', 'PT'), ('UD', 'UD'), ('CV', 'CV'), ('KOPRASI', 'KOPRASI'), ('YAYASAN', 'YAYASAN')]
+        string='Badan Hukum', store=True,
+        selection=[('PT', 'PT'), ('UD', 'UD'), ('CV', 'CV'), ('KOPERASI', 'KOPRASI'), ('YAYASAN', 'YAYASAN'), ('TOKO', 'TOKO'), ('APOTIK', 'APOTIK')]
     )
     credit_limit = fields.Integer(
         string='Amount Spent this Month ', 
@@ -74,6 +75,9 @@ class ResPartner(models.Model):
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
+
+    # approval = fields.Selection([("cash","Cash"),("card","Card")], string='Approval')
+    # approval = fields.Char(string='Product name')
 
     def generate_no_anggota(self):
         print(self)
