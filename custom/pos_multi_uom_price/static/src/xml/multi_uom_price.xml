@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ehuerta _at_ ixer.mx -->
+
+<templates id="template" xml:space="preserve">
+
+	<t t-name="UOMButton" owl="1">
+		<span class="control-button">
+			<i class='fa fa-tag'></i>
+			<span> </span>
+			<span>UOM</span>
+		</span>
+	</t>
+	
+</templates>
