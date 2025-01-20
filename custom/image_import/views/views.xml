@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="image_import.list">
+      <field name="name">image_import list</field>
+      <field name="model">image_import.image_import</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="image_import.action_window">
+      <field name="name">image_import window</field>
+      <field name="res_model">image_import.image_import</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="image_import.action_server">
+      <field name="name">image_import server</field>
+      <field name="model_id" ref="model_image_import_image_import"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="image_import" id="image_import.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="image_import.menu_1" parent="image_import.menu_root"/>
+    <menuitem name="Menu 2" id="image_import.menu_2" parent="image_import.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="image_import.menu_1_list" parent="image_import.menu_1"
+              action="image_import.action_window"/>
+    <menuitem name="Server to list" id="image_import" parent="image_import.menu_2"
+              action="image_import.action_server"/>
+-->
+  </data>
+</odoo>

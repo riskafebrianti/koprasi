@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+    
+        <record id="wizard_import_image_view_form" model="ir.ui.view">
+            <field name="name">wizard.import.image.view.form</field>
+            <field name="model">wizard.import.image</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="folder_name" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="import_image" string="Import" type="object" class="oe_highlight" />
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_import_image_action" model="ir.actions.act_window">
+            <field name="name">Import Product Image</field>
+            <field name="res_model">wizard.import.image</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            id="wizard_import_image_menu"
+            name="Import Product Image"
+            action="wizard_import_image_action"
+            parent="stock.menu_product_in_config_stock"
+            sequence="1"/>
+    
+    </data>
+    
+</odoo>
