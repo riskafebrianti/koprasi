@@ -29,7 +29,7 @@
         'views/templates.xml',
         'views/followup.xml',
         'views/report_tagihan.xml',
-        # 'views/res.xml',
+        'views/res.xml',
         'views/invoice.xml',
         'views/res_users.xml',
         'views/website.xml',
