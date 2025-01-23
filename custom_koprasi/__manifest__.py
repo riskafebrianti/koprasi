@@ -33,7 +33,7 @@
         'views/invoice.xml',
         'views/res_users.xml',
         'views/website.xml',
-        'views/loan.xml',
+        # 'views/loan.xml',
         'views/note_pos.xml'
         # 'security/product_approval_management_groups.xml',
         # 'security/ir.model.access.csv',
