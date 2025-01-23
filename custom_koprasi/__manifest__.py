@@ -29,10 +29,14 @@
         'views/templates.xml',
         'views/followup.xml',
         'views/report_tagihan.xml',
-        'views/res.xml',
+        # 'views/res.xml',
         'views/invoice.xml',
         'views/res_users.xml',
         'views/website.xml',
+        'views/loan.xml',
+        'views/note_pos.xml'
+        # 'security/product_approval_management_groups.xml',
+        # 'security/ir.model.access.csv',
         # 'views/assets.xml',
         # 'views/pos.xml'
         # ' stazstic/src/xml/uom.xml',
@@ -42,9 +46,11 @@
             # 'custom_koprasi/static/src/js/PaymentScreen.js',
             'custom_koprasi/static/src/js/OrderReceipt.js',
             'custom_koprasi/static/src/js/payment.js',
-            # 'custom_koprasi/static/src/js/disablee.js',
+            'custom_koprasi/static/src/xml/button.xml',
             # 'custom_koprasi/static/src/js/producrscreen.js'
             'custom_koprasi/static/src/xml/pos.xml',
+            'custom_koprasi/static/src/js/button.js',
+            # 'custom_koprasi/static/src/js/order_extension.js',
             'custom_koprasi/static/src/xml/disablee.xml',
             # 'custom_koprasi/static/src/xml/productconfig.xml',
         ],
