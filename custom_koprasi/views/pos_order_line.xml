@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.actions.act_window" id="custom_koprasi.action_window">
+        <field name="name">Detail Order</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    
+    <record model="ir.ui.view" id="pos_order_line_tree">
+        <field name="name">pos.order.line.tree</field>
+        <field name="model">pos.order.line</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree_all_sales_lines"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <field name="toko" widget="badge" decoration-success="toko == 'TA 1'" decoration-warning="toko == 'TA 2'"/>
+            </xpath>
+        </field>
+    </record>
+       
+      <menuitem name="Detail Order" id="custom_koprasi.menuuu" parent="point_of_sale.menu_point_root" sequence="4"
+            action="custom_koprasi.action_window"/>
+
+    <record model="ir.ui.view" id="pos_order_linee_searchhh">
+        <field name="name">pos.order.search</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <!-- <field name="product_id"/> -->
+                <filter name="fl_draft" string="Today"  domain="[('create_date',  '=', context_today())]"/>
+            </search>
+        </field>
+    </record>
+
+
+</odoo>
