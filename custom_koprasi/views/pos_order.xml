@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="before">
-                    <field name="payment_ids"/>
+                    
                     <field name="method_pay"/>
                 </xpath>
             </field>
