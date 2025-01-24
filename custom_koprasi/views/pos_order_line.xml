@@ -29,7 +29,7 @@
             <search>
                 <field name="product_id"/>
                 <!-- <field name="product_id"/> -->
-                <filter name="fl_draft" string="Today"  domain="[('create_date',  '=', context_today())]"/>
+                <filter name="fl_draft" string="Today"  domain="[('order_id.date_order',  '>=', (datetime.datetime.now().strftime('%Y-%m-%d') ))]"/>
             </search>
         </field>
     </record>
