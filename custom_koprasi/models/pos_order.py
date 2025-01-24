@@ -4,7 +4,7 @@ from odoo.exceptions import UserError
 class Pos_orderan(models.Model):
     _inherit = 'pos.order'
 
-    method_pay = fields.Char(string='Product name', compute='method_payy',)
+    method_pay = fields.Char(string='Payment Method', compute='method_payy',)
     # payment = fields.One2many('pos.payment', 'order_id', string='Riwayat Jual')
     # payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     # payment_method = fields.Many2one('pos.payment', string='Kasir')
