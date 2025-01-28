@@ -15,7 +15,9 @@
 
              <field name="function" position="before">
                 <field name="tabungan"></field>
+                <field name="approval"/>
             </field>
+
 
              <field name="barcode" position="after">
                 <field name="limit"></field>
