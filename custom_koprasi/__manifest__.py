@@ -34,7 +34,7 @@
         'views/res_users.xml',
         'views/website.xml',
         'views/pos_order_line.xml',
-        'views/sale.xml',
+        # 'views/sale.xml',
         # 'views/loan.xml',
         'views/pos_order.xml',
         # 'views/note_pos.xml'
