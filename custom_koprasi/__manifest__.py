@@ -34,11 +34,12 @@
         'views/res_users.xml',
         'views/website.xml',
         'views/pos_order_line.xml',
-        # 'views/sale.xml',
-        # 'views/loan.xml',
         'views/pos_order.xml',
+        # 'views/sale.xml',
+        # 'report/template.xml',
+        # 'views/loan.xml',
+        
         # 'views/note_pos.xml'
-        'report/template.xml',
         # 'security/product_approval_management_groups.xml',
         # 'security/ir.model.access.csv',
         # 'views/assets.xml',
