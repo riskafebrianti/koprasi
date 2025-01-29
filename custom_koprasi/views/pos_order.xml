@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="before">
-                    
+                    <field name="note"/>
                     <field name="method_pay"/>
                 </xpath>
             </field>
@@ -19,8 +19,23 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="method_pay" />
+
+
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="pos_order__searchhh">
+        <field name="name">pos.order.search</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <search>
+              
+                <filter name="fl_draft" string="Today"  domain="[('date_order',  '>=', (datetime.datetime.now().strftime('%Y-%m-%d') ))]"/>
+            </search>
+        </field>
+    </record>
+
+
     </data>
 </odoo>
