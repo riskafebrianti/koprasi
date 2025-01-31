@@ -1,4 +1,4 @@
-odoo.define('custom_koprasi.models', function(require) {
+odoo.define('custom_koprasi.Orderline', function(require) {
     'use strict';
 
     var { Orderline } = require('point_of_sale.models');
@@ -6,16 +6,22 @@ odoo.define('custom_koprasi.models', function(require) {
 
     const CustomOrder = (Orderline) => class CustomOrder extends Orderline{
         export_for_printing(){
-            var result = super.export_for_printing(...arguments);
-            result.digital = this.get_product().digital;
+            const result = super.export_for_printing(...arguments);
+            const product = this.get_product();
+            // console.log(result,'doinjdsanso')
+            console.log(product,'doinjdsanso')
+            result.digital = product.digital;
+            result.digital_inv = product.digital_inv;
             return result;
         }
     }
+    
 
     Registries.Model.extend(Orderline, CustomOrder);
 
     });
 
+  
 // odoo.define('custom_koprasi.receipt', function(require){
 //     "use strict";
 //     var models = require('point_of_sale.models');

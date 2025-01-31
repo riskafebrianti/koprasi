@@ -50,7 +50,7 @@ class PosSession(models.Model):
                 'domain': domain,
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
-                    'default_code', 'digital','to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
+                    'default_code', 'digital','digital_inv','to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
                     'available_in_pos', 'attribute_line_ids', 'active', '__last_update', 'image_128'
                 ],
                 'order': 'sequence,default_code,name',

@@ -59,6 +59,11 @@
                             Customer: <t t-esc="receipt.partner.name"/>
                         </div>
                     </t>
+                    <t t-if="this.env.pos.get_order().note">
+                        <div>
+                            Keterangan: <t t-esc='this.env.pos.get_order().note'/>
+                        </div>
+                    </t>
                     </div>
                     <br /><br />
 
@@ -73,7 +78,7 @@
                     <t t-if="!isTaxIncluded">
                         <div class="pos-receipt-right-align">--------</div>
                         <br/>
-                        <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
+                        <!-- <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div> -->
                         <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                             <div class="responsive-price">
                                 <t t-esc="tax.name" />
@@ -190,11 +195,14 @@
             <xpath expr="//t[@ t-foreach='receipt.orderlines']" position="replace">
                 <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
                     <t t-if="isSimple(line)">
-                        <div class="responsive-price">
-                            <t t-esc="line.product_name_wrapped[0]" />
-                            <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
-                        </div>
-                        <WrappedProductNameLines line="line" />
+                        <t t-if="line.digital_inv == false">
+                            <div class="responsive-price">
+                                <t t-esc="line.product_name_wrapped[0]" />
+                                <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
+                            </div>
+                            <WrappedProductNameLines line="line" />
+                            
+                        </t>
                     </t>
                     <t t-else="">
                         <div t-esc="line.product_name_wrapped[0]" />
@@ -221,20 +229,26 @@
                                 Discount: <t t-esc="line.discount" />%
                             </div>
                         </t>
-                        <div class="pos-receipt-left-padding">
-                            <t t-if="line.digital == false ">
+
+                        <t t-if="line.digital == false">
+                            <div class="pos-receipt-left-padding">
+                            <!-- <t t-if="line.digital == false "> -->
                                 <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
+                                <!-- <t t-esc="line.digital"/> -->
                             
-                            <!-- <t t-esc="line.digital"/> -->
-                            <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
+                            <!-- <t t-if="!line.is_in_unit" t-esc="line.unit_name" /> -->
                             x
                             <t t-esc="env.pos.format_currency(line.price_display_one)" />
-                            </t>
-                            <span class="price_display pos-receipt-right-align">
-                                <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
-                            </span>
-                        </div>
-                    </t>
+                            <!-- </t> -->
+                            <!-- <t t-if="line.digital == True"> -->
+                                
+                                <span class="price_display pos-receipt-right-align">
+                                    <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
+                                </span>
+                            <!-- </t> -->
+                            </div>
+                        </t>
+                      
                     <t t-if="line.customer_note">
                         <div class="pos-receipt-left-padding pos-receipt-customer-note">
                             <t t-esc="line.customer_note"/>

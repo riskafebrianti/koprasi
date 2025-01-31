@@ -25,14 +25,18 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="pos_order__searchhh">
-        <field name="name">pos.order.search</field>
+        inher
+        <record model="ir.ui.view" id="pos_order__searchhhhh">
+        <field name="name">pos.order.search.inherit</field>
         <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
         <field name="arch" type="xml">
-            <search>
-              
-                <filter name="fl_draft" string="Today"  domain="[('date_order',  '>=', (datetime.datetime.now().strftime('%Y-%m-%d') ))]"/>
-            </search>
+            <xpath expr="//search[1]" position="inside">
+                    <filter name="pymny" string="Cash" domain="[('method_pay', '=', 'Cash')]" />
+                    <filter name="pymnt" string="Today"  domain="[('date_order',  '>=', (datetime.datetime.now().strftime('%Y-%m-%d') ))]"/>
+                </xpath>
+
+          
         </field>
     </record>
 
