@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     approval = fields.Selection([("manager","Manager")], string='Approval')
     today = datetime.now()
     # date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else (12, datetime.now().year-1) 
-    date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).stgitrftime('%Y-%m-%d') if datetime.now().month != 1 else datetime.now().replace(year=datetime.now().year - 1, month=12, day=1)
+    date_begin = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22) if datetime.now().month != 1 else datetime.now().replace(year=datetime.now().year - 1, month=12, day=1)
     simla_anggota = fields.One2many("account.move.line",'partner_id') 
     no_anggota = fields.Integer('Nomor Anggota',tracking=1)
     anggota_koprasi = fields.Boolean(string='Anggota Koprasi',tracking=1, default=False)
