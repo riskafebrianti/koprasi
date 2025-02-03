@@ -1,5 +1,5 @@
 // BiProductScreen js
-odoo.define('bi_pos_restrict_zero_qty.productScreen', function(require) {
+odoo.define('custom_koprasi.productScreen', function(require) {
 	"use strict";
 
 	const Registries = require('point_of_sale.Registries');
@@ -12,57 +12,48 @@ odoo.define('bi_pos_restrict_zero_qty.productScreen', function(require) {
 				super.setup();
 			}
 			async _onClickPay() {
-				var self = this;
-				let order = this.env.pos.get_order();
-				let lines = order.get_orderlines();
-				let pos_config = self.env.pos.config;				
 				let call_super = true;
-				var config_id=self.env.pos.config.id;
-				let prod_used_qty = {};
-				let restrict = false;
-				if(pos_config.restrict_zero_qty){
-					$.each(lines, function( i, line ){
-						let prd = line.product;
-						if (prd.type == 'product'){
-							if(prd.id in prod_used_qty){
-								let old_qty = prod_used_qty[prd.id][1];
-								prod_used_qty[prd.id] = [prd.qty_available,line.quantity+old_qty]
-							}else{
-								prod_used_qty[prd.id] = [prd.qty_available,line.quantity]
-							}
-						}
-						if (prd.type == 'product'){
-							if(prd.qty_available <= 0){
-								restrict = true;
-								call_super = false;
-								let wrning = prd.display_name + ' is out of stock.';
-								self.showPopup('ErrorPopup', {
-									title: self.env._t('Zero Quantity Not allowed'),
-									body: self.env._t(wrning),
-								});
-							}
-						}
-					});
-					if(restrict === false){
-						$.each(prod_used_qty, function( i, pq ){
-							let product = self.env.pos.db.get_product_by_id(i);
-							let check = pq[0] - pq[1];
-							let wrning = product.display_name + ' is out of stock.';
-							if (product.type == 'product'){
-								if (check < 0){
-									call_super = false;
-									self.showPopup('ErrorPopup', {
-										title: self.env._t('Deny Order'),
-										body: self.env._t(wrning),
-									});
-								}
-							}
-						});
-					}	
-				}
+				const order = this.currentOrder;
+				var lines = order.get_orderlines();
+				if (this.env.pos.res_setting['stock_from'] == 'current_warehouse') {
+                    if (this.env.pos.res_setting['stock_type'] == 'on_hand') {
+                        let stopValidation = false;
+                        // lines.forEach(async(line) => {
+                        for (const line of lines)  {
+                            const item_quantity = line.quantity
+                            const on_hand_qty = line.product.on_hand
+                            console.log(line.product.display_name,"halooo")
+                            const available_qty = line.product.available
+                            // if 
+                            if (on_hand_qty < item_quantity){
+                                // var item_quantity = line.quantity
+                                // var on_hand_qty = line.product.on_hand
+                                // var new_qty = on_hand_qty + item_quantity
+                                // line.product.on_hand = new_qty
+
+                                const body = _.str.sprintf(this.env._t('%s is Out Of Stock'), );
+                                const bodyy = "Total Limit " + line.product
+                                await this.showPopup('ErrorPopup', {
+                                    title: this.env._t("Cek Stok"),
+                                    body :
+                                    this.env._t(line.product.display_name),
+                                    // break;
+                                });
+                                
+                                return
+                            }
+                          
+                        }
+                    } 
+                }
+				// if(this.env.pos.get_order()){
+				// 	console.log("this.env.pos.get_order()")
+
+				
 				if(call_super){
 					super._onClickPay();
 				}
+				
 			}
 		};
 
