@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ <template id="pos_order_lap">
+ 
+        <t t-call="web.html_container">
+            <!-- <t t-foreach="docs" t-as="o"> -->
+                <t t-call="web.external_layout">
+                    <div class="page" style="border:0px solid; height:100%; margin-top:60px">
+                    <span>Laporan Harian Toko <t t-esc="docs.config_id.name"/> </span><br/>
+                    <span>Date : <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/> </span>
+                    <br/> <br/>
+                       <table>
+                            <tr>
+                                <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:2%;">No</td>
+                                <!-- <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:2%;">Order Ref</td> -->
+                                <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:15%;">No. Receipt</td>
+                                <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:10%;">Customer</td>
+                                <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:40%;">Product - Qty</td>
+                                <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:5%;">Amount</td>
+                                <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:5%;">Method</td>
+                                <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px;">Cashier</td>
+                                <!-- <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:2%;">Note</td> -->
+                            </tr>
+
+                            <t t-set="no" t-value="1"/>
+                <!-- <t t-foreach="x.invoice_dataa" t-as="inv"> -->
+                            <t t-foreach="docs" t-as="dataa">
+
+                                <tr>
+                                    <td style="border: 1px solid; font-size:13px;text-align: center; color:black; padding:5px;"><span t-esc="no"/> </td>
+                                    <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="dataa.pos_reference"/> </td>
+                                    <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="dataa.partner_id"/> </td>
+                                    <td>
+                                        <table style="width: 100%; border-collapse: collapse;">
+                                            <t t-foreach="dataa.lines" t-as="line">
+                                                <tr>
+                                                    <td style="width:90%;"><span t-field="line.full_product_name" /> (Qty: <t t-esc="line.qty"/>)</td>
+                                                    <!-- <td style="width:10%;"><span t-field="line.qty" /></td> -->
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </td>
+                                    <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;">Rp.<span t-esc="'{0:,.2f}'.format(int(dataa.amount_total))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}'/> </td>
+                                    <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="dataa.method_pay"/> </td>
+                                    <td style="border: 1px solid; font-size:13px; text-align: left; color:black; padding:5px;"><span t-field="dataa.cashier"/> </td>
+                                
+                        
+                            <t t-set="no" t-value="no + 1"/>
+                            </tr> 
+
+                        </t>
+                        <tr>
+                                <td colspan="4" class="text-center" style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">Saldo Awal</td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="3" align="left" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(200000))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+
+                        </tr>
+                        <tr>
+                                <td colspan="4" class="text-center" style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">Amount Total</td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="3" align="left" style="font-size:16px; width:20%;  font-weight:bold; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.amount_total for line in docs)+200000))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+                                <!-- <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.price_subtotal for line in o.lines)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td> -->
+                        </tr>
+                        </table>
+                        <br/><br/>
+                            <div class="ttd" style="border:0px solid; float: right; color: black; width:30% ;"> 
+                           <br/><br/><br/><br/><br/>
+                                <!-- <strong><hr width="100%" style="border: 1px solid black; color: black !important;"/></strong> -->
+                                <p style="margin:top; "><center><u><span t-field="user.name"/></u><br/> Kasir </center></p>
+                            </div>
+                    </div>
+                </t>
+            <!-- </t> -->
+        </t>
+
+        <!-- <t t-call="web.external_layout">
+            <t t-call="web.html_container" style="border:1px solid; font-family: sans-serif">
+                <table>
+                    <tr>
+                        <td style="border: 1px solid;  font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:2%;">No</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:17%;">Nomor Invoice</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:13%;">Nomor PO</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:8%;">Tanggal Invoice</td>
+                        <td style="border: 1px solid; font-size:19px; font-weight: bold; text-align: center; color:black; padding:5px; width:5%;">Jumlah</td>
+                       
+                    </tr>
+                </table>
+                <t t-foreach="docs" t-as="data">
+                    
+                </t>
+            </t>
+        </t> -->
+    </template>
+    
+
+</odoo>

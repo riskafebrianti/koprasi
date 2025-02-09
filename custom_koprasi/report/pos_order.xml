@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pos_order">
+        <t t-call="web.html_container" style="border:0px solid; font-family: sans-serif">
+        <t t-foreach="docs" t-as="o">
+        <br/>
+        <!-- <div t-attf-class="o_company_#{company_id}_layout header" t-att-style="report_header_style" > -->
+            <!-- <t t-call="web.external_layout"> -->
+            <center>
+            <span style="font-size:17px;font-family: sans-serif">
+                <t t-esc="o.company_id.name"/><br/>
+            </span>
+            <span>
+                Telp : <t t-esc="o.company_id.phone"/>
+            </span><br/>
+            <span>-------------------------------------------------</span><br/>
+            <span> Served by <t t-esc="o.cashier"/></span><br/>
+            <span> Customer : <t t-esc="o.partner_id.name"/></span><br/>
+            
+            </center>
+            <br/><br/>
+
+            <table style= "width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="font-size:14px;width:40%;"></th>
+                                <th style="font-size:14px;width:40%;"></th>
+                                <th style="font-size:14px;width:20%;"></th>      
+                            </tr>
+                        </thead>
+                        <!-- <t t-set="i" t-value="0"/> -->
+                        <t t-foreach="o.lines" t-as="line">
+                            <!-- <t t-set="i" t-value="i+1"/> -->
+                            <!-- <t t-set="tes" t-value="o.paid()"/> -->
+                            
+                            <tr>
+                                <td style="font-size:13px; width:40%; font-family: sans-serif">
+                                    <t t-esc="line.full_product_name"/>
+                                </td>
+                                
+                                    
+                                <td style="font-size:13px; width:40%;  font-family: sans-serif">
+                                    <t t-if="line.qty > 1">
+                                        <t t-esc="line.qty" /> x <t t-esc="line.price_unit" />
+                                    </t>
+                                    <!-- <t t-else="line.qty">
+
+                                    </t> -->
+                                </td>
+                                <td align="right" style="font-size:13px; width:20%;">
+                                    <t t-esc="'{0:,.0f}'.format(line.price_subtotal)"/>
+                                <!-- <td align="left" style= "font-size:15px; color:black; font-weight: bold;width:20%;"><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.price_subtotal for line in o.lines)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td> -->
+                                </td>
+                               
+                                
+                            </tr>
+                            
+                        </t>
+                       <tr>
+                            <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">TOTAL</td>
+                            <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                            <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.price_subtotal for line in o.lines)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+
+                       </tr>
+                        <t t-if="len(o.payment_ids) > 1">
+                            <tr>
+                                <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif"> <t t-esc="o.payment_ids.payment_method_id.name"/></td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(o.payment_ids[-1].amount))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+                            </tr>
+                            <tr>
+                                <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">CHANGE</td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(o.payment_ids[0].amount))[1:]" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+                            </tr>
+                        </t>
+                        <t t-else="len(o.payment_ids) == 1 ">
+                            <tr>
+                                <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif"> <t t-esc="o.payment_ids.payment_method_id.name"/></td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(o.payment_ids.amount))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+
+                            </tr>
+                        </t>
+                     
+                       
+                       <strong>
+                       
+                      </strong>
+                    </table>
+                    
+            </t>
+        </t>
+            
+    </template>
+
+</odoo>

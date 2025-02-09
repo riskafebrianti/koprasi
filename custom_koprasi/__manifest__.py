@@ -36,7 +36,11 @@
         'views/pos_order_line.xml',
         'views/pos_order.xml',
         # 'views/sale.xml',
-        # 'report/template.xml',
+        'report/template.xml',
+        'report/report.xml',
+        'report/pos_order.xml',
+        'report/report_kwitansi.xml',
+        'report/pos_order_lap.xml',
         # 'views/loan.xml',
 
         # 'views/note_pos.xml'

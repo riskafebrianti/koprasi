@@ -1,4 +1,89 @@
-    <record id="action_report_tagihan" model="ir.actions.report">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_custom" model="report.paperformat">
+        <field name="name">Custom Format</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">7</field>
+        <field name="margin_bottom">7</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    
+    <record id="paperformat_custom_pos" model="report.paperformat">
+        <field name="name">Custom Format</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <!-- <field name="page_height">0</field>
+        <field name="page_width">76</field> -->
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">1</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">133</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <!-- <field name="dpi">100</field> -->
+    </record>
+
+    <record id="paperformat_custom_landscape" model="report.paperformat">
+        <field name="name">Custom Format Landscape</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">4</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <!-- <field name="header_spacing">0</field> -->
+        <field name="dpi">150</field>
+    </record>
+
+
+    <record id="action_report_room_booking_deposit" model="ir.actions.report">
+        <field name="name">Re-print Struk</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_koprasi.pos_order</field>
+        <field name="report_file">custom_koprasi.pos_order</field>
+        <field name="paperformat_id" ref="custom_koprasi.paperformat_custom_pos"/>
+        <field name="print_report_name">'Print'</field>
+        <field name="binding_model_id" ref="model_pos_order"/>
+    </record> 
+<!-- report_kwitansi -->
+    <record id="action_report_tree" model="ir.actions.report">
+        <field name="name">Laporan Kasir</field>
+        <field name="model">pos.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_koprasi.pos_order_lap</field>
+        <field name="report_file">custom_koprasi.pos_order_lap</field>
+        <field name="paperformat_id" ref="custom_koprasi.paperformat_custom"/>
+        <field name="print_report_name">'Laporan Kasir - %s' % (object.config_id.name)</field>
+        <field name="binding_model_id" ref="model_pos_order"/>
+    </record> 
+        
+   <record id="report_multiple_invoice" model="ir.actions.report">
+        <field name="name">Kwitansi</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_koprasi.report_kwitansi</field>
+        <field name="report_file">custom_accounting.report_kwitansi</field>
+        <field name="print_report_name">'Kwitansi Report'</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+    </record>
+<!-- <record id="action_report_tagihan" model="ir.actions.report">
         <field name="name">Follow-up Report</field>
         <field name="model">res.partner</field>
         <field name="report_type">qweb-pdf</field>
@@ -6,4 +91,6 @@
         <field name="report_file">cust_diskon.report_tagihan</field>
         <field name="print_report_name">'Follow-up Report'</field>
         <field name="binding_model_id" ref="model_res_partner"/>
-    </record> 
+    </record>  -->
+</odoo>
+

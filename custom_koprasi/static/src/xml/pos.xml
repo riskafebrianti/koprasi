@@ -55,7 +55,7 @@
                             </div>
                         </t>
                         <t t-if="receipt.partner">
-                        <div>
+                        <div style="font-size:18px;">
                             Customer: <t t-esc="receipt.partner.name"/>
                         </div>
                     </t>
@@ -78,7 +78,7 @@
                     <t t-if="!isTaxIncluded">
                         <div class="pos-receipt-right-align">--------</div>
                         <br/>
-                        <!-- <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div> -->
+                        <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
                         <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
                             <div class="responsive-price">
                                 <t t-esc="tax.name" />
@@ -178,7 +178,7 @@
 
                     <br/>
                     <div class="pos-receipt-order-data">
-                        <div><t t-esc="receipt.name" /></div>
+                        <div style="font-size:18px;"><t t-esc="receipt.name" /></div>
                         <t t-if="receipt.date.localestring">
                             <div><t t-esc="receipt.date.localestring" /></div>
                         </t>
