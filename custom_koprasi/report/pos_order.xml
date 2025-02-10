@@ -82,13 +82,16 @@
                                 <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(o.payment_ids.amount))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
 
                             </tr>
-                        </t>
-                     
-                       
-                       <strong>
-                       
-                      </strong>
+                           </t>
                     </table>
+                        <center>
+                            <span style="font-size:17px;font-family: sans-serif">
+                                <t t-esc="o.name" /><br/>
+                            </span>
+                            <span style="font-size:17px;font-family: sans-serif">
+                                <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /><br/>
+                            </span>
+                        </center>
                     
             </t>
         </t>
