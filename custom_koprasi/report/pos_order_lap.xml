@@ -6,7 +6,43 @@
             <!-- <t t-foreach="docs" t-as="o"> -->
                 <t t-call="web.external_layout">
                     <div class="page" style="border:0px solid; height:100%; margin-top:60px">
-                    <span>Laporan Harian Toko <t t-esc="docs.config_id.name"/> </span><br/>
+                    
+                        <span>Laporan Harian Toko </span>
+                            <t t-set="prev_name" t-value="''"/>
+                            <t t-set="unique_names" t-value="[]"/>  <!-- List untuk menyimpan nama unik -->
+                            <t t-set="output" t-value="''"/>  <!-- Variabel untuk menyimpan hasil -->
+
+                            <t t-foreach="docs" t-as="data">
+                                <t t-if="data.config_id.name not in unique_names">
+                                    <t t-set="unique_names" t-value="unique_names + [data.config_id.name]"/>
+                                </t>
+                            </t>
+
+                            <t t-if="len(unique_names) > 1">  <!-- Jika lebih dari satu nama unik, tambahkan koma -->
+                                <t t-set="output" t-value="' dan '.join(unique_names)"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="output" t-value="unique_names[0] if unique_names else ''"/>
+                            </t>
+
+                            <t t-esc="output"/>
+
+                            <!-- <t t-set="prev_name" t-value="''"/>  //Inisialisasi variabel kosong
+                            <t t-foreach="docs" t-as="data">
+                                <t t-if="data.config_id.name != prev_name">
+                                    <t t-if="len(data.config_id.name) > 1">
+                                        <t t-esc="data.config_id.name"/> -
+                                        <t t-set="prev_name" t-value="data.config_id.name"/>
+                                    </t>
+                                    <t t-else="len(data.config_id.name) == 1 ">
+                                        <t t-esc="data.config_id.name"/> 
+                                        <t t-set="prev_name" t-value="data.config_id.name"/>
+                                    </t>
+                                </t>
+                            </t> -->
+                        <!-- </span> -->
+                        <br/>
+                    
                     <span>Date : <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/> </span>
                     <br/> <br/>
                        <table>
@@ -49,6 +85,12 @@
                             </tr> 
 
                         </t>
+                         <tr>
+                                <td colspan="4" class="text-center" style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">Subtotal</td>
+                                <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
+                                <td colspan="3" align="left" style="font-size:16px; width:20%;  font-weight:bold; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.amount_total for line in docs)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
+                                <!-- <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(sum(line.price_subtotal for line in o.lines)))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td> -->
+                        </tr>
                         <tr>
                                 <td colspan="4" class="text-center" style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif">Saldo Awal</td>
                                 <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
