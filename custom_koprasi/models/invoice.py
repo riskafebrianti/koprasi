@@ -8,7 +8,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-class Account(models.Model):
+class Accountnya(models.Model):
     _inherit = 'account.account'
     simpok = fields.Boolean('Simpok', tracking=1)
     simwab = fields.Boolean('Simwab', tracking=1)
@@ -17,12 +17,13 @@ class Account(models.Model):
     counter_account = fields.Many2one(comodel_name='account.account', string='Counter Account', tracking=1)
     other_account = fields.Many2one(comodel_name='account.account', string='Other Account', tracking=1)
     
-class AccountMove(models.Model):
+class ubah(models.Model):
     _inherit = 'account.move'
 
     custtt = fields.Char('Customer', related='line_ids.partner_id.display_name',)
     cust = fields.Char('Customer', related='partner_id.name')
     company = fields.Char('Company', related='partner_id.commercial_company_name')
+    pos_payment = fields.Char('POS Payment Method', related='pos_order_ids.payment_ids.payment_method_id.name')
     entri = fields.Selection([
         ('simwa', 'Simpanan Wajib'),
         ('simsu', 'Simpanan Sukarela'),
@@ -37,6 +38,10 @@ class AccountMove(models.Model):
     simwab = fields.Boolean(string='Entries Simwab')
     # partner = fields.Many2many('res.partner', 'res_partner_wizard_template_rel', string='Karyawan')
     amount_simsu = fields.Float(string='Amount Sukarela', store=True)
+    
+    # @api.depends('pos_payment_ids')
+    # def pos_payment_compute(self):
+    #     self.price_total = self.quantity * self.price
     
     def load_simsu(self):
         print(self)
@@ -205,8 +210,8 @@ class MoveLine(models.Model):
 
 
   
-class PossConfig(models.Model):
-    _inherit = 'pos.config'
+# class PossConfig(models.Model):
+#     _inherit = 'pos.config'
 
     # invoice_auto_check = fields.Boolean()
 # class PosConfig(models.TransientModel):

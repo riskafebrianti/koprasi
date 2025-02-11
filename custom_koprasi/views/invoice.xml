@@ -179,7 +179,13 @@
         <field name="arch" type="xml">
           <xpath expr="//tree//field[2]" position="after">
                 <field name="invoice_partner_display_name" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" />
+                <!-- <field name="pos_payment"/> -->
            </xpath> 
+           <xpath expr="////tree//field[@name='payment_state']" position="after">
+                <!-- <field name="invoice_partner_display_name" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')" groups="base.group_user" string="Customer" /> -->
+                <field name="pos_payment"/>
+           </xpath> 
+          
           
         </field>
     </record>
