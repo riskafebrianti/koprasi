@@ -54,7 +54,8 @@
         'point_of_sale.assets': [
             # 'custom_koprasi/static/src/js/PaymentScreen.js',
             'custom_koprasi/static/src/js/OrderReceipt.js',
-            'custom_koprasi/static/src/js/payment.js',
+            # 'custom_koprasi/static/src/js/payment.js',
+            'custom_koprasi/static/src/js/method.js',
             'custom_koprasi/static/src/xml/button.xml',
             'custom_koprasi/static/src/js/producrscreen.js',
             'custom_koprasi/static/src/xml/pos.xml',
