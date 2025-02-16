@@ -50,7 +50,7 @@
                             <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
                             <span t-esc="forced_vat"/>
                         </li>
-                    </ul>
+                    </ul>wk
                 </div> -->
             </div>
             
@@ -59,6 +59,45 @@
 
        
     
+    </xpath>
+
+    <xpath expr="//div[hasclass('text-center')]" position="replace">
+
+        <table style="border: 1px solid; width:100%;">
+            <tr>
+                <td colspan="5" style="height:40px; color:black;">   
+                    <span style="float:left; margin-left:20px;">Dibuat Oleh,</span>   <br></br><br></br><br></br><br></br><br></br>
+                    <span style="float:left; margin-left:20px;">Erista</span>    
+                    <!-- <div style="line-height: 1.1em; border: 1px solid black; color:black;"></div> -->
+                </td>
+                <td colspan="5" style="height:115px; color:black;">   
+                    <span style="float:left;margin-left:20px;">Diketahui Oleh,</span>     <br></br><br></br><br></br><br></br><br></br>
+                    <span style="float:left; margin-left:20px;">RINDA</span>  
+                    <!-- <div style="line-height: 1.1em; border: 1px solid black; color:black;"></div> -->
+                </td>
+                <td colspan="5" style="height:115px; color:black;">   
+                    <span style="float:left;margin-left:20px;">Diproses Oleh,</span>  <br></br><br></br><br></br><br></br><br></br>
+                    <span style="float:left; margin-left:20px;">MELIANI</span>     
+                    <!-- <div style="line-height: 1.1em; border: 1px solid black; color:black;"></div> -->
+                </td>
+                <td colspan="5" style="height:115px; color:black;">   
+                    <span style="float:left;margin-left:20px;">Dibukukan Oleh,</span> <br></br><br></br><br></br><br></br><br></br>
+                    <span style="float:left; margin-left:20px;">DESI</span>      
+                    <!-- <div style="line-height: 1.1em; border: 1px solid black; color:black;"></div> -->
+                </td>
+
+                <td colspan="2"  style="height:115px; color:black;">   
+                    <span style="float:left;margin-left:20px;">Disetujui Oleh,</span> <br></br><br></br><br></br><br></br><br></br>
+                    <span style="float:left; margin-left:20px;">RUDI TJAN</span>      
+                    <!-- <div style="line-height: 1.1em; border: 1px solid black; color:black;"></div> -->
+                </td>
+            </tr>
+            
+        </table>
+        <h6 style="color:black; text-align: right;">Dicetak Oleh <span t-field="user.name"/> Tanggal <b><t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d, %B %Y')"/>
+        |   Page: <span class="page"/> / <span class="topage"/>
+            </b>
+        </h6>
     </xpath>
 	
 </template>
