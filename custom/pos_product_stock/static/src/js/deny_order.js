@@ -63,12 +63,12 @@ odoo.define('pos_product_stock.Custom', function(require) {
                         for (const line of lines)  {
                             const item_quantity = line.quantity
                             const on_hand_qty = line.product.on_hand
-                            console.log(line.product.available,"halooo")
-                            console.log(on_hand_qty,"oh")
-                            console.log(item_quantity,"iq")
+                            // console.log(line.product.available,"halooo")
+                            // console.log(on_hand_qty,"oh")
+                            // console.log(item_quantity,"iq")
                             const available_qty = line.product.available
                             const tes = on_hand_qty < item_quantity
-                            console.log(tes,"cnd")
+                            // console.log(tes,"cnd")
                             // if 
                             if (on_hand_qty < item_quantity){
                                 
