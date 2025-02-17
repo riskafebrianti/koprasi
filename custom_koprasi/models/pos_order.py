@@ -20,7 +20,7 @@ class Pos_orderan(models.Model):
         dataa = self.env['pos.order'].sudo().search([('method_pay','=', False)])
         if dataa:
             for data_pos in dataa:
-                data_pos.method_pay = data_pos.payment_ids.payment_method_id.name
+                data_pos.method_pay = data_pos.payment_ids[0].payment_method_id.name
         else:
             for data in self:
                 if data.payment_ids:
