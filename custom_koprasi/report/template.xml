@@ -94,7 +94,7 @@
             </tr>
             
         </table>
-        <h6 style="color:black; text-align: right;">Dicetak Oleh <span t-field="user.name"/> Tanggal <b><t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d, %B %Y')"/>
+        <h6 style="color:black; text-align: right;">Dicetak Oleh : <span t-field="user.name"/> Tanggal <b><t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d, %B %Y')"/>
         |   Page: <span class="page"/> / <span class="topage"/>
             </b>
         </h6>
