@@ -66,20 +66,29 @@ class ResPartner(models.Model):
     @api.depends('pos_order_ids.partner_id')
     def compute_amount(self):
         buka= datetime.now().replace(day=22)
-        if datetime.now().day > 22: #bila tgl hari ini lebih besar dari 22
+        if datetime.now().day >= 22: #bila tgl hari ini lebih besar dari 22
             date_buka = datetime.now().replace(day=22,)
             date_tutup = datetime.now().replace(day=22, month =datetime.now().month+1)
+
+            for record in self:
+                amount_pos = self.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),
+                                                                        ('payment_method_id.name','=','Customer Account'),
+                                                                        ('payment_date','>',date_buka), 
+                                                                        ('payment_date','<=',date_tutup)])
+                record.credit_limit = sum(amount_pos.mapped('amount'))
+            
         if datetime.now().day < 22: #bila tgl hari ini lebih besar dari 22
             date_buka = datetime.now().replace(day=22, month =datetime.now().month-1)
             date_tutup = datetime.now().replace(day=22,)
             # date_buka = datetime.now().replace(datetime.now().year, datetime.now().month-1, day=22).stgitrftime('%Y-%m-%d') if datetime.now().month != 1 else datetime.now().replace(year=datetime.now().year - 1, month=12, day=22)
             # date_tutup = datetime.now().replace(datetime.now().year, datetime.now().month, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else datetime.now().replace(year=datetime.now().year - 1, month=12, day=1)
-        for record in self:
-            amount_pos = self.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),
-                                                                    ('payment_method_id.name','=','Customer Account'),
-                                                                    ('payment_date','>',date_buka), 
-                                                                    ('payment_date','<=',date_tutup)])
-            record.credit_limit = sum(amount_pos.mapped('amount'))
+        
+            for record in self:
+                amount_pos = self.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),
+                                                                        ('payment_method_id.name','=','Customer Account'),
+                                                                        ('payment_date','>',date_buka), 
+                                                                        ('payment_date','<=',date_tutup)])
+                record.credit_limit = sum(amount_pos.mapped('amount'))
             
     
 
