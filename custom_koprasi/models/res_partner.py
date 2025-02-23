@@ -63,7 +63,7 @@ class ResPartner(models.Model):
             order.tabungan = order.credit - order.debit
             print(order)
     
-    @api.depends('pos_order_ids.partner_id')
+    @api.depends('pos_order_ids.partner_id','invoice_ids')
     def compute_amount(self):
         buka= datetime.now().replace(day=22)
         if datetime.now().day >= 22: #bila tgl hari ini lebih besar dari 22
@@ -71,11 +71,13 @@ class ResPartner(models.Model):
             date_tutup = datetime.now().replace(day=22, month =datetime.now().month+1)
 
             for record in self:
-                amount_pos = self.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),
-                                                                        ('payment_method_id.name','=','Customer Account'),
-                                                                        ('payment_date','>',date_buka), 
-                                                                        ('payment_date','<=',date_tutup)])
-                record.credit_limit = sum(amount_pos.mapped('amount'))
+                amount_pos = self.env['account.move'].sudo().search([('partner_id','=',record.id),
+                                                                    ('payment_state','=', 'not_paid'),
+                                                                    ('pos_order_ids.payment_ids.payment_method_id.name','=','Customer Account'),
+                                                                    ('create_date','>',date_buka),
+                                                                    ('create_date','<=',date_tutup)
+                                                                    ])
+                record.credit_limit = sum(amount_pos.mapped('amount_total'))
             
         if datetime.now().day < 22: #bila tgl hari ini lebih besar dari 22
             date_buka = datetime.now().replace(day=22, month =datetime.now().month-1)
@@ -84,11 +86,13 @@ class ResPartner(models.Model):
             # date_tutup = datetime.now().replace(datetime.now().year, datetime.now().month, day=22).strftime('%Y-%m-%d') if datetime.now().month != 1 else datetime.now().replace(year=datetime.now().year - 1, month=12, day=1)
         
             for record in self:
-                amount_pos = self.env['pos.payment'].sudo().search([('pos_order_id.partner_id','=',record.id),
-                                                                        ('payment_method_id.name','=','Customer Account'),
-                                                                        ('payment_date','>',date_buka), 
-                                                                        ('payment_date','<=',date_tutup)])
-                record.credit_limit = sum(amount_pos.mapped('amount'))
+                amount_pos = amount_pos = self.env['account.move'].sudo().search([('partner_id','=',record.id),
+                                                                    ('payment_state','=', 'not_paid'),
+                                                                    ('pos_order_ids.payment_ids.payment_method_id.name','=','Customer Account'),
+                                                                    ('create_date','>',date_buka),
+                                                                    ('create_date','<=',date_tutup)
+                                                                     ])
+                record.credit_limit = sum(amount_pos.mapped('amount_total'))
             
     
 

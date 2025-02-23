@@ -29,9 +29,6 @@ from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 import base64
 
 
-
-
-
 class PosSession(models.Model):
     _inherit = 'pos.session'
 
@@ -81,144 +78,42 @@ class PosOrder(models.Model):
             result['note'] = ui_order['note']
         return result
 
-# class PosPayment(models.Model):
-#     _inherit = 'pos.payment'
-#     note = fields.Char(string='Note Order',store=True)
-#     # def create(self,vals):
-#     #     limit = self.env['pos.order'].sudo().search([('id','=',vals['pos_order_id'])]).partner_id.limit
-#     #     total_utang = self.env['pos.order'].sudo().search([('id','=',vals['pos_order_id'])]).partner_id.credit_limit
-#     #     print(vals)
-#     #     if total_utang + vals['amount'] > limit:
-#     #         raise ValidationError(_("LIMIT BOS"))
+class PosPaymentt(models.Model):
+    _inherit = 'pos.payment'
+   
 
-#     #     else:
-#     #         result = super(PosPayment, self).create(vals)
-
-#     #     return result
-#     @api.model
-    # def _order_fields(self, ui_order):
-    #     # Panggil super untuk mendapatkan fields default
-    #     fields = super(PosSession, self)._order_fields(ui_order)
-
-    #     # Tambahkan atau modifikasi value dari frontend POS
-    #     fields['note'] = ui_order.get('note', '') + ' - Processed from POS'
-    #     # fields['custom_field'] = 'Value from Frontend'
-    #     return fields
-    
-
-
-
-# class PosOrder(models.Model):
-#     _inherit = "pos.order"
-
-#     employee_id = fields.Many2one('hr.employee', help="Person who uses the cash register. It can be a reliever, a student or an interim employee.", states={'done': [('readonly', True)], 'invoiced': [('readonly', True)]})
-#     cashier = fields.Char(string="Cashier", compute="_compute_cashier", store=True)
-#     note = fields.Char(string='Note Order',store=True, compute="_order_fields")
-
-    # @api.model
-    # def _order_fields(self, CustomDemoButtons):
-    #     print(CustomDemoButtons)
-        # order_fields = super(PosOrder, self)._export_for_ui()
-        # order_fields['employee_id'] 
-
-        # return order_fields
-
-#     @api.depends('note')
-#     def _compute_cashierrr(self):
-#         for order in self:
-#             # if order.employee_id:
-#             order.note = order.note
-#                 # order.cashier = order.user_id.name
-
-#     def _export_for_ui(self, order):
-#         result = super(PosOrder, self)._export_for_ui(order)
-#         result.update({
-#             'note': order.note,
-#         })
-#         return result
-    
-#     @api.model
-#     def _order_fields(self, ui_order):
-#         # Panggil super untuk mendapatkan fields default
-#         fields = super(PosOrder, self)._order_fields(ui_order)
-
-#         # Tambahkan atau modifikasi value dari frontend POS
-#         fields['note'] = ui_order.get('note', '') + ' - Processed from POS'
-#         # fields['custom_field'] = 'Value from Frontend'
-#         return fields
-
+    def _create_payment_moves(self):
+        result = self.env['account.move']
+        for payment in self:
+            order = payment.pos_order_id
+            payment_method = payment.payment_method_id
+            if payment_method.type in ('pay_later' ,'cash') or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
+                continue
+            accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
+            pos_session = order.session_id
+            journal = pos_session.config_id.journal_id
+            payment_move = self.env['account.move'].with_context(default_journal_id=journal.id).create({
+                'journal_id': journal.id,
+                'date': fields.Date.context_today(payment),
+                'ref': _('Invoice payment for %s (%s) using %s') % (order.name, order.account_move.name, payment_method.name),
+                'pos_payment_ids': payment.ids,
+            })
+            result |= payment_move
+            payment.write({'account_move_id': payment_move.id})
+            amounts = pos_session._update_amounts({'amount': 0, 'amount_converted': 0}, {'amount': payment.amount}, payment.payment_date)
+            credit_line_vals = pos_session._credit_amounts({
+                'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
+                'partner_id': accounting_partner.id,
+                'move_id': payment_move.id,
+            }, amounts['amount'], amounts['amount_converted'])
+            debit_line_vals = pos_session._debit_amounts({
+                'account_id': pos_session.company_id.account_default_pos_receivable_account_id.id,
+                'move_id': payment_move.id,
+            }, amounts['amount'], amounts['amount_converted'])
+            self.env['account.move.line'].with_context(check_move_validity=False).create([credit_line_vals, debit_line_vals])
+            payment_move._post()
+        return result
 
     
-    # class PosOrderss(models.Model):
-    #     _inherit = 'pos.order'
-
-    #     note = fields.Text('Customer Note',)  # Kolom catatan
-
-        
-
-    #     def _export_for_ui(self, order):
-    #         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-    #         return {
-    #             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
-    #             'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
-    #             'name': order.pos_reference,
-    #             'uid': re.search('([0-9-]){14}', order.pos_reference).group(0),
-    #             'amount_paid': order.amount_paid,
-    #             'amount_total': order.amount_total,
-    #             'amount_tax': order.amount_tax,
-    #             'amount_return': order.amount_return,
-    #             'pos_session_id': order.session_id.id,
-    #             'note': order.note,
-    #             'pricelist_id': order.pricelist_id.id,
-    #             'partner_id': order.partner_id.id,
-    #             'user_id': order.user_id.id,
-    #             'sequence_number': order.sequence_number,
-    #             'creation_date': str(order.date_order.astimezone(timezone)),
-    #             'fiscal_position_id': order.fiscal_position_id.id,
-    #             'to_invoice': order.to_invoice,
-    #             'to_ship': order.to_ship,
-    #             'state': order.state,
-    #             'account_move': order.account_move.id,
-    #             'id': order.id,
-    #             'is_tipped': order.is_tipped,
-    #             'tip_amount': order.tip_amount,
-    #             'access_token': order.access_token,
-    #         }    
-    #         print(self)  
-
-    #     @api.model
-    #     def set_order_note(self, CustomDemoButtons):
-    #         # _logger.info(f"Menyiapkan catatan untuk order {order_id} dengan note: {note}")
-    #         order = self.browse(CustomDemoButtons)  # Mencari order berdasarkan ID
-    #         if order:
-    #             order.note  =  CustomDemoButtons# Menyimpan catatan pada order
-    #             # return True
-    #     #     return True
-
-    # -*- coding: utf-8 -*-
-
-
-# class PosOrder(models.Model):
-#     _inherit = "pos.order"
-
-#     note = fields.Text('Customer Note',compute="get_order_details", store=True) 
-
-#     @api.model
-#     def get_order_details(self, CustomDemoButtons):
-#         order = self.env['pos.order'].browse(CustomDemoButtons)
-#         if order:
-#             return {
-#                 'name': order.name,
-#                 'note': order.note,
-#                 'lines': [{
-#                     'product': line.product_id.name,
-#                     'qty': line.qty,
-#                     'price': line.price_unit,
-#                 } for line in order.lines],
-#             }
-#         return {}
-
-    
-        
 
     
