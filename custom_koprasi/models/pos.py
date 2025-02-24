@@ -27,6 +27,9 @@ from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 # from odoo.exceptions import ValidationError, UserError
 # from odoo.osv.expression import AND
 import base64
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class PosSession(models.Model):
@@ -83,9 +86,9 @@ class PosOrder(models.Model):
         _inherit = 'pos.payment'
     
 
-        def _create_payment_moves(self):
-
+        def _create_payment_moves(self,is_reverse=False):
             
+            _logger.info("Creating payment moves, is_reverse: %s", is_reverse)
             result = self.env['account.move']
             for payment in self:
                 order = payment.pos_order_id
