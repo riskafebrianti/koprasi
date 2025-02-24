@@ -16,12 +16,6 @@ import logging
 from datetime import timedelta
 from functools import partial
 from itertools import groupby
-
-# from odoo import api, fields, models, _
-from odoo.tools import formatLang, float_is_zero
-# from odoo.exceptions import ValidationError
-
-
 from collections import defaultdict
 
 import psycopg2
@@ -84,7 +78,7 @@ class PosOrder(models.Model):
             result['note'] = ui_order['note']
         return result
 
-class PosPayment(models.Model):
+class PosPaymentt(models.Model):
 
     _inherit = 'pos.payment'
    
@@ -94,7 +88,7 @@ class PosPayment(models.Model):
         for payment in self:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
-            if payment_method.type == 'cash' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
+            if payment_method.type == 'pay_later' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
                 continue
             accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
             pos_session = order.session_id
