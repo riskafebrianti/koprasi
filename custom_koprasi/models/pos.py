@@ -88,7 +88,7 @@ class PosPaymentt(models.Model):
         for payment in self:
             order = payment.pos_order_id
             payment_method = payment.payment_method_id
-            if payment_method.type == 'pay_later' or payment_method.type == 'cash' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
+            if payment_method.type == 'cash' or float_is_zero(payment.amount, precision_rounding=order.currency_id.rounding):
                 continue
             accounting_partner = self.env["res.partner"]._find_accounting_partner(payment.partner_id)
             pos_session = order.session_id
