@@ -16,6 +16,12 @@ import logging
 from datetime import timedelta
 from functools import partial
 from itertools import groupby
+
+# from odoo import api, fields, models, _
+from odoo.tools import formatLang, float_is_zero
+# from odoo.exceptions import ValidationError
+
+
 from collections import defaultdict
 
 import psycopg2
@@ -78,7 +84,7 @@ class PosOrder(models.Model):
             result['note'] = ui_order['note']
         return result
 
-class PosPaymentt(models.Model):
+class PosPayment(models.Model):
 
     _inherit = 'pos.payment'
    
