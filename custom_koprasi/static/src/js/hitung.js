@@ -59,6 +59,24 @@ odoo.define('custom_koprasi.hitung', function(require) {
                        
                     } 
                 }
+                if (sub_total > inputAmount) {
+                    const defaultProductId = "ROUND";  // Ganti dengan ID produk default yang ingin ditambahkan
+                    const defaultProduct = Object.values(this.env.pos.db.product_by_id).find(
+                        (product) => product.display_name === defaultProductId
+                    );
+                    const pengurangann = sub_total - inputAmount ;
+                    // console.log("A", inputAmount);
+                    // console.log("B", sub_total);
+                
+            
+                    if (defaultProduct) {
+                        order.add_product(defaultProduct, {
+                            price: pengurangann, // Harga default
+                        });
+                       
+                    } 
+                }
+                
                 
                 
                 // console.log("Amount Set:", formattedAmount);
