@@ -43,7 +43,7 @@ odoo.define('custom_koprasi.hitung', function(require) {
                
             
                 if (sub_total < inputAmount) {
-                    const defaultProductId = "round";  // Ganti dengan ID produk default yang ingin ditambahkan
+                    const defaultProductId = "ROUND";  // Ganti dengan ID produk default yang ingin ditambahkan
                     const defaultProduct = Object.values(this.env.pos.db.product_by_id).find(
                         (product) => product.display_name === defaultProductId
                     );
