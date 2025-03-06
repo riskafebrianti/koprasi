@@ -14,9 +14,16 @@
             <span>
                 Telp : <t t-esc="o.company_id.phone"/>
             </span><br/>
+             <span>
+               <t t-esc="o.company_id.email"/>
+            </span><br/>
             <span>-------------------------------------------------</span><br/>
             <span> Served by <t t-esc="o.cashier"/></span><br/>
             <span> Customer : <t t-esc="o.partner_id.name"/></span><br/>
+            <t t-if="o.note">
+                <span> Keterangan : <t t-esc="o.note"/></span><br/>
+            </t>
+            
             
             </center>
             <br/><br/>
@@ -86,7 +93,7 @@
                     </table>
                         <center>
                             <span style="font-size:17px;font-family: sans-serif">
-                                <t t-esc="o.name" /><br/>
+                                <t t-esc="o.pos_reference" /><br/>
                             </span>
                             <span style="font-size:17px;font-family: sans-serif">
                                 <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')" /><br/>

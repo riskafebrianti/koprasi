@@ -10,4 +10,14 @@
           <span>Note Order</span>
       </div>
   </t>
+  <t t-name="CustomButtons" owl="1">
+      <div class="control-button">
+          <!-- <i class="fa fa-pen"> </i> -->
+          <!-- <i class="fa-user-pen"> </i> -->
+          <i class="fa-regular fa-user-pen"></i>
+          <span> </span>
+          <span>Total</span>
+          <t t-esc="customerNote" />
+      </div>
+  </t>
 </templates>
