@@ -35,7 +35,7 @@
         'views/website.xml',
         'views/pos_order_line.xml',
         'views/pos_order.xml',
-        'views/stock_move.xml',
+        # 'views/stock_move.xml',
         # 'views/sale.xml',
         'report/template.xml',
         'report/report.xml',
