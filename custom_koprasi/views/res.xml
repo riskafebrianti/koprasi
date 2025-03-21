@@ -8,7 +8,7 @@
             <!-- Add your xpath here -->
             <field name="vat" position="after">
                 <!-- <field name="company_partner"/>  -->
-                <!-- <field name="company_partner_id"/>  -->
+                <field name="company_partner_id"/> 
                 <field name="anggota_koprasi"/>
                 <field name="no_anggota" readonly="1" attrs="{'invisible': [('anggota_koprasi', '=', False)]}"/>
                 
