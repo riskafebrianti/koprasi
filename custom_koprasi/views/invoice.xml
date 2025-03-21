@@ -189,11 +189,11 @@
           
         </field>
     </record>
-    <!-- <menuitem name="Simpanan Wajib" id="custom_koprasi.menu_1_list" parent="account.menu_finance_receivables" sequence="1"
-        action="custom_koprasi.nama_model_action"/>
+    <menuitem name="Simpanan Wajib" id="menu_1_list" parent="account.menu_finance_receivables" sequence="2"
+        action="nama_model_action_new"/>
 
-    <menuitem name="Simpanan Sukarela" id="custom_koprasi.menu_2_list" parent="account.menu_finance_receivables" sequence="1"
-        action="custom_koprasi.nama_model_action_simla"/> -->
+    <menuitem name="Simpanan Sukarela" id="menu_2_list" parent="account.menu_finance_receivables" sequence="3"
+        action="nama_model_action_simla"/>
 
     <record id="nama_model_action_new" model="ir.actions.act_window">
         <field name="name">Nama Model</field>
@@ -241,6 +241,64 @@
             </xpath>
         </field>
     </record>
+
+    <record id="server_action_approve_invoice" model="ir.actions.server">
+        <field name="name">Approve Invoice Automatically</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="binding_model_id" ref="account.model_account_move_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.new_entry()
+            <!-- action -->
+            <!-- record.new_entry() -->
+        </field>
+    </record>
+    
+    
+    <record model="ir.ui.view" id="nama_model_form">
+        <field name="name">account.move.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="pelunasan"/>
+                <field name="company" string="Gender"/>
+               
+            </xpath>
+        </field>
+    </record>
+
+   <!-- <record id="school_student_search" model="ir.ui.view">
+        <field name="name">account.move.line.search</field>
+        <field name="model">account.move.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="parent_state"/>
+            </search>
+        </field>
+    </record> -->
+    <record id="inherit_view_id_move" model="ir.ui.view">
+        <field name="name">account.move.line.view.form.inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="arch" type="xml">
+            <search>
+                <field string="Perusahaan" name="company"/>
+
+                 <group string="string">
+                    <filter name="fl_draft" string="Entry"  domain="[('account_id.name','=','Piutang Waserda'),('pelunasan','=', False),('move_name','!=','/'),('move_name','like','INV'),('name','not like','PELUNASAN')]"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_company" string="Perusahaan" domain="[]" context="{'group_by': 'company'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+        
+
+    
 
 </odoo>
 
