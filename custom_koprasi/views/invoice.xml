@@ -243,15 +243,14 @@
     </record>
 
     <record id="server_action_approve_invoice" model="ir.actions.server">
-        <field name="name">Approve Invoice Automatically</field>
+        <field name="name">Otomatis Anggota</field>
         <field name="model_id" ref="account.model_account_move_line"/>
         <field name="binding_model_id" ref="account.model_account_move_line"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
             action = records.new_entry()
-            <!-- action -->
-            <!-- record.new_entry() -->
+            
         </field>
     </record>
     

@@ -210,10 +210,10 @@ class MoveLine(models.Model):
     company = fields.Char(string='Perusahaan', compute='company_partner', store=True)
     # company = fields.Many2one('res.partner', string='company Partner',related='partner_id.company_partner_id')
 
-    # @api.depends('quantity', 'price')
+    @api.depends('move_id','move_id.partner_id')
     def company_partner(self):
         for data in self:
-            data.company = data.partner_id.company_partner_id.name
+            data.company = data.move_id.partner_id.company_partner_id.name
     
 
     
@@ -223,55 +223,80 @@ class MoveLine(models.Model):
         selected_records = self.browse(self.env.context['active_ids'])
         
         invoice_vals = {
-            # 'move_type': 'out_invoice',  # Jenis invoice: 'out_invoice' (customer) atau 'in_invoice' (vendor)
-            # 'partner_id': selected_records[0].partner_id.id,  # Ambil partner dari record pertama
             'invoice_date': fields.Date.today(),
-            # 'state' : 'posted',
+            # 'move_type': 'out_invoice',
             'invoice_line_ids': []
             
         }
         company_totals = {}
         print(selected_records)
-        # Loop setiap record yang dipilih untuk membuat invoice line
+
         for rec in selected_records:
-            line_vals = (0, 0, {
-                'account_id': rec.account_id.id,
-                'partner_id': rec.partner_id.id,
-                'name': 'PELUNASAN ANGGOTA'+rec.name,
-                'debit': rec.debit, 
-                'credit': rec.credit,  # Harga jual
-                # 'account_id': rec.product_id.categ_id.property_account_income_categ_id.id,  # Akun pendapatan default
-            })
-            invoice_vals['invoice_line_ids'].append(line_vals)
-            rec.pelunasan = True
+            if rec.partner_id.company_partner_id:
+                line_vals = (0, 0, {
+                    'account_id': rec.account_id.id,
+                    'partner_id': rec.partner_id.id,
+                    'name': 'PELUNASAN ANGGOTA '+rec.name,
+                    'debit': rec.debit, 
+                    'credit': rec.credit, 
+                })
+                invoice_vals['invoice_line_ids'].append(line_vals)
+                
+              
+                company_partner = rec.partner_id.company_partner_id
+                if company_partner:
+                    if company_partner not in company_totals:
+                        company_totals[company_partner] = {'debit': 0, 'credit': 0, 'account_id': rec.account_id.id}
 
-            company_partner = rec.partner_id.company_partner_id
-            if company_partner:
-                if company_partner not in company_totals:
-                    company_totals[company_partner] = {'debit': 0, 'credit': 0, 'account_id': rec.account_id.id}
+                    
+                    company_totals[company_partner]['debit'] += rec.debit
+                    company_totals[company_partner]['credit'] += rec.credit
+                    
+                    for move in rec.move_id:
+                        if move.payment_state == 'paid':
+                            raise UserError(_('Invoice sudah dibayar.'))
 
-                    # Tambahkan ke total
-                company_totals[company_partner]['debit'] += rec.debit
-                company_totals[company_partner]['credit'] += rec.credit
+                        payment_register = self.env['account.payment.register'].with_context(
+                            active_model='account.move',
+                            active_ids=move.ids
+                        ).create({
+                            'payment_date': fields.Date.today(),
+                            'amount': move.amount_residual,  # Sisa jumlah yang harus dibayar
+                            'payment_type': 'inbound' if move.move_type in ('out_invoice', 'in_refund') else 'outbound',
+                            'partner_id': move.partner_id.id,
+                            'partner_type': 'customer' if move.move_type in ('out_invoice', 'out_refund') else 'supplier',
+                            'journal_id': self.env['account.journal'].search([('type', '=', 'cash')], limit=1).id,
+                            'communication' : move.name
+                        })
 
+                        # Konfirmasi pembayaran
+                        payment_register._create_payments()
+
+                    # return True
+            
+            else:
+                raise UserError(rec.partner_id.name +'Tidak ada Nama Perusahaan')
+        
         for company_partner, totals in company_totals.items():
+            
             line_val_company = (0, 0, {
                 'account_id': totals['account_id'],  # Sesuaikan akun
                 'partner_id': company_partner.id,
-                'name': 'PELUNASAN ANGGOTA',
+                'name': 'PELUNASAN ANGGOTA ' + rec.partner_id.company_partner_id.name,
                 'debit': totals['credit'], 
                 'credit': totals['debit'], 
             })
 
-        # invoice_vals['invoice_line_ids'].append(line_vals)
-
-        # Pastikan hanya menambahkan jika company_partner ada
             if company_partner:
                 invoice_vals['invoice_line_ids'].append(line_val_company)
+            else:
+                raise UserError(rec.partner_id.name +'Tidak ada Nama Perusahaan')
                 
-        print(selected_records)
-        # Buat invoice
+       
+            rec.pelunasan = True
         invoice = self.env['account.move'].create(invoice_vals)
+
+
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
@@ -281,8 +306,6 @@ class MoveLine(models.Model):
         }
 
        
-        
-
 
     @api.onchange('partner_id')
     def infomasiSimpanan(self):
