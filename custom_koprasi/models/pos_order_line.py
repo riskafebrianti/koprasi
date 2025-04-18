@@ -7,8 +7,8 @@ class linePOS(models.Model):
     toko = fields.Char(string='Toko', related='order_id.config_id.name',store=True)
     payment_method = fields.Char(string='Payment Method', related='order_id.payment_ids.payment_method_id.name',store=True)
     partner_ids = fields.Char(string='Customer',related='order_id.partner_id.name',)
-    date_orders = fields.Date(string='Date Order', compute='compute_relate',)
-    refund = fields.Char(string='Keterangan',compute='compute_relate')
+    date_orders = fields.Date(string='Date Order', compute='compute_relate', store=True,)
+    refund = fields.Char(string='Keterangan',compute='compute_relate',store=True,)
 
     # @api.depends('order_id.state')
     def compute_relate(self):
