@@ -8,12 +8,22 @@
         <!-- <field name="context">{'order_id': 'order_id desc'}</field> -->
         <!-- <field name="context">{'order': 'create_date desc'}</field> -->
         <!-- <field name="context">{'order': 'id desc'}</field> -->
-        <field name="domain">[('order_id.is_send', '=', None)]</field>
+        <field name="domain">[('order_id.is_send', '=', false)]</field>
        
     </record>
 
    
-
+    <record id="server_action_refresh" model="ir.actions.server">
+        <field name="name">Refresh</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order_line"/>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order_line"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_refresh_compute()
+            
+        </field>
+    </record>
       
 
 
@@ -23,13 +33,18 @@
         <field name="model">pos.order.line</field>
         <field name="inherit_id" ref="point_of_sale.view_pos_order_tree_all_sales_lines"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="replace">
+                <field name="create_date" optional="hide"/>
+            </xpath>
             <xpath expr="//field[@name='price_unit']" position="after">
                 <field name="payment_method"/>
                 <!-- <field name="order_id"/> -->
                 <field name="toko" widget="badge" decoration-success="toko == 'TA 1'" decoration-warning="toko == 'TA 2'"/>
+                <field name="refund"/>
                 
             </xpath>
             <xpath expr="//field[@name='product_id']" position="before">
+                <field name="date_orders"/>
                 <field name="partner_ids"/>
             </xpath>
         </field>
@@ -43,8 +58,11 @@
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
             <search>
+                <field name="order_id"/>
                 <field name="product_id"/>
                 <field name="toko"/>
+                <field name="partner_ids"/>
+                <field name="payment_method"/>
 
                 <!-- <field name="product_id"/> -->
                 <filter name="fl_draft" string="Today"  domain="[('order_id.date_order',  '>=', (datetime.datetime.now().strftime('%Y-%m-%d') ))]"/>
