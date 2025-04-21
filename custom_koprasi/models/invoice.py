@@ -39,28 +39,55 @@ class ubah(models.Model):
     # partner = fields.Many2many('res.partner', 'res_partner_wizard_template_rel', string='Karyawan')
     amount_simsu = fields.Float(string='Amount Sukarela', store=True)
     
-    # def create(self,vals):
-        
-    #     # limit = self.env['pos.order'].sudo().search([('id','=',vals['pos_order_id'])]).partner_id.limit
-    #     # total_utang = self.env['pos.order'].sudo().search([('id','=',vals['pos_order_id'])]).partner_id.credit_limit
-    #     move = super(ubah, self).create(vals)
-
-    #     # Cek apakah invoice berasal dari POS
-    #     pos_order = self.env['pos.order'].sudo().search([('account_move', '=', move.id)], limit=1)
-        
-    #     if pos_order:
-    #         # Cek apakah metode pembayaran adalah "Cash"
-    #         cash_payment = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.is_cash_count)  # Cek metode pembayaran
+    pos_count = fields.Integer(compute='_compute_pos_count',
+                                string="Invoice "
+                                        "Count",
+                                help="The number of invoices created")
+    
+    pos_refund_count = fields.Integer(compute='_compute_pos_count',
+                                string="Invoice "
+                                        "Count",
+                                help="The number of invoices created")
+    
+    def _compute_pos_count(self):
+        """Compute the invoice count"""
+        for record in self:
             
-    #         if cash_payment:
-    #             move.payment_state = 'not_paid'  # Set status invoice tetap belum terbayarkan
+            record.pos_count = self.env['pos.order'].search_count(
+                [('name', '=', self.ref)])
+            if record.pos_count:
+                record.pos_refund_count = self.env['pos.order'].search_count(
+                    [('name', '=', self.ref+' REFUND')])
+            else:
+                record.pos_refund_count = 0
+            # if record.pos_refund_count
 
-    #     print(vals)
-        # return move
-        # if vals.get('to_invoice') == True:
-        #     payment_state = 'not_paid'
-
-        # return super(ubah, self).create(vals)
+    def action_view_pos(self):
+        # """Method for Returning invoice View"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Point Of Sale Order',
+            'view_mode': 'list,form',
+            'view_type': 'list,form',
+            'res_model': 'pos.order',
+            'domain': [('name', '=', self.ref)],
+            'context': {'create': False},
+            'target': 'current',
+        }
+    
+    def action_view_pos_refund(self):
+        # """Method for Returning invoice View"""
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Point Of Sale Order',
+            'view_mode': 'list,form',
+            'view_type': 'list,form',
+            'res_model': 'pos.order',
+            'domain': [('name', '=', self.ref+' REFUND')],
+            'context': {'create': False},
+            'target': 'current',
+        }
+    
     
     def load_simsu(self):
         print(self)
@@ -237,8 +264,8 @@ class MoveLine(models.Model):
                     'account_id': rec.account_id.id,
                     'partner_id': rec.partner_id.id,
                     'name': 'PELUNASAN ANGGOTA '+rec.name,
-                    'debit': rec.debit, 
-                    'credit': rec.credit, 
+                    'debit':  rec.credit, 
+                    'credit': rec.debit,
                 })
                 invoice_vals['invoice_line_ids'].append(line_vals)
                 
@@ -255,27 +282,9 @@ class MoveLine(models.Model):
                     for move in rec.move_id:
                         if move.payment_state == 'paid':
                             raise UserError(_('Invoice sudah dibayar.'))
-
-                        payment_register = self.env['account.payment.register'].with_context(
-                            active_model='account.move',
-                            active_ids=move.ids
-                        ).create({
-                            'payment_date': fields.Date.today(),
-                            'amount': move.amount_residual,  # Sisa jumlah yang harus dibayar
-                            'payment_type': 'inbound' if move.move_type in ('out_invoice', 'in_refund') else 'outbound',
-                            'partner_id': move.partner_id.id,
-                            'partner_type': 'customer' if move.move_type in ('out_invoice', 'out_refund') else 'supplier',
-                            'journal_id': self.env['account.journal'].search([('type', '=', 'cash')], limit=1).id,
-                            'communication' : move.name
-                        })
-
-                        # Konfirmasi pembayaran
-                        payment_register._create_payments()
-
-                    # return True
             
-            else:
-                raise UserError(rec.partner_id.name +'Tidak ada Nama Perusahaan')
+                else:
+                    raise UserError(rec.partner_id.name +'Tidak ada Nama Perusahaan')
         
         for company_partner, totals in company_totals.items():
             
@@ -283,8 +292,8 @@ class MoveLine(models.Model):
                 'account_id': totals['account_id'],  # Sesuaikan akun
                 'partner_id': company_partner.id,
                 'name': 'PELUNASAN ANGGOTA ' + rec.partner_id.company_partner_id.name,
-                'debit': totals['credit'], 
-                'credit': totals['debit'], 
+                'debit': totals['debit'],
+                'credit': totals['credit'],  
             })
 
             if company_partner:
@@ -313,36 +322,7 @@ class MoveLine(models.Model):
             if record.partner_id:
                 record.info = record.partner_id.tabungan
     
-    # @api.onchange('partner_id')
-    # def infomasiSimpanan(self):
-    #     if self.partner_id:
-    #         for record in self:
-    #             if record.move_id.amount_simsu == 0.0:
-    #                 record.move_id.amount_simsu = record.partner_id.tabungan[0]
-        
-                
-            # info= {
-            #     'simwa': simwa,
-            #     'sukarela': simsu
-            # }
-            # self.info_simwa = info  
-
-
-
-  
-# class PossConfig(models.Model):
-#     _inherit = 'pos.config'
-
-    # invoice_auto_check = fields.Boolean()
-# class PosConfig(models.TransientModel):
-#     _inherit = 'res.config.settings'
-
-#     invoice_auto_check = fields.Boolean(
-#         related="pos_config_id.invoice_auto_check",
-#         help='Check to enable the invoice button',
-#         readonly=False, store=True,
-#         config_parameter='pos_invoice_automate.invoice_auto_check')
-
+    
 
 
 

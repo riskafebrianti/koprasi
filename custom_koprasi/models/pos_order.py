@@ -21,7 +21,20 @@ class Pos_orderan(models.Model):
 
     method_pay = fields.Char(string='Payment Method', compute='method_payy',store=True)
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=lambda self: fields.Datetime.context_timestamp(self, fields.Datetime.now()))
-   
+    state_invc = fields.Char(string='Status Invoice', store=True)
+
+    @api.depends('state')
+    def get_state(self):
+        for rec in self:
+            data = rec.account_move
+            if data.payment_state == 'not_paid':
+                rec.state_invc = 'Belum Lunas'
+            elif data.payment_state == 'paid':
+                rec.state_invc = 'Lunas'
+            if not data:
+                rec.state_invc = 'Tidak ada Invoice'
+    
+
     @api.depends('payment_ids')
     def method_payy(self):
         dataa = self.env['pos.order'].sudo().search([('method_pay','=', False)])

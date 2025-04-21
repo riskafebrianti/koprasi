@@ -129,6 +129,7 @@
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="partneram" widget="many2many_tags" invisible="context.get('hide_partner', True)" />
                 <field name="amount_simsu" invisible="context.get('hide_amount_simsu', True)"/>
+
             </xpath>
             <xpath expr="//header//button[@name='action_post']" position="after">
                 <button name="load_simwab" string="Load Simwab Partner" type="object" invisible="context.get('hide_load_simwab', True)"/>
@@ -136,8 +137,32 @@
                 <button name="fee_simla" string="Fee Simla Partner" type="object" invisible="context.get('hide_fee_simla', True)"/>
                 <button name="pay_simla" string="Cash Out Simla Partner" type="object" invisible="context.get('hide_pay_simla', True)"/>
             </xpath>
+
+            
+
+            <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object"
+                            name="action_view_pos"
+                            attrs="{'invisible': [('pos_count', '==', 0)]}"
+                            icon="fa-list-ul">
+                        <field string="POS" name="pos_count"
+                                widget="statinfo"/>
+                               
+                    </button> 
+                    <button class="oe_stat_button" type="object"
+                            name="action_view_pos_refund"
+                            attrs="{'invisible': [('pos_refund_count', '==', 0)]}"
+                            icon="fa-list-ul">
+                        <field string="POS REFUND" name="pos_refund_count"
+                                widget="statinfo"/>
+                               
+                    </button> 
+                </div>
+
         </field>
     </record>
+
+    
 
     <record model="ir.ui.view" id="inherit_account_account">
         <field name="name">account.account.form</field>
@@ -242,17 +267,30 @@
         </field>
     </record>
 
-    <record id="server_action_approve_invoice" model="ir.actions.server">
-        <field name="name">Otomatis Anggota</field>
-        <field name="model_id" ref="account.model_account_move_line"/>
-        <field name="binding_model_id" ref="account.model_account_move_line"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">
-            action = records.new_entry()
-            
-        </field>
-    </record>
+    <record id="server_action_entry_data" model="ir.actions.server">
+         <field name="name">Entry Misc</field>
+         <field name="model_id" ref="account.model_account_move_line"/>
+         <field name="binding_model_id" ref="account.model_account_move_line"/>
+         <field name="binding_view_types">list</field>
+         <field name="state">code</field>
+         <field name="code">
+             action = records.new_entry()
+             <!-- action -->
+             <!-- record.new_entry() -->
+         </field>
+     </record>
+
+     <!-- <record id="server_action_approve_invoice" model="ir.actions.server">
+            <field name="name">Refresh</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="binding_model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.get_state()
+                
+            </field>
+        </record> -->
     
     
     <record model="ir.ui.view" id="nama_model_form">
@@ -262,7 +300,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="pelunasan"/>
-                <field name="company" string="Gender"/>
+                <field name="company"/>
                
             </xpath>
         </field>

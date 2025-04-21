@@ -22,10 +22,26 @@
 
 
                 </xpath>
+                <xpath expr="//page[@name='extra']" position="inside">
+                    <group string="Accounting Info">
+                        <!-- <field name="session_move_id" readonly="1"/> -->
+                        <field name="state_invc"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
-        inher
+        <record id="server_action_approve_invoice" model="ir.actions.server">
+            <field name="name">Refresh</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order_line"/>
+            <field name="binding_model_id" ref="point_of_sale.model_pos_order_line"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.get_state()
+                
+            </field>
+        </record>
         <record model="ir.ui.view" id="pos_order__searchhhhh">
         <field name="name">pos.order.search.inherit</field>
         <field name="model">pos.order</field>
