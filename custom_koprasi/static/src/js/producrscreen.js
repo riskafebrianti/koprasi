@@ -15,14 +15,14 @@ odoo.define('custom_koprasi.productScreen', function(require) {
 				let call_super = true;
 				const order = this.currentOrder;
 				var lines = order.get_orderlines();
-				if (this.env.pos.res_setting['stock_from'] == 'current_warehouse') {
-                    if (this.env.pos.res_setting['stock_type'] == 'on_hand') {
+				// if (this.env.pos.res_setting['stock_from'] == 'current_warehouse') {
+                    // if (this.env.pos.res_setting['stock_type'] == 'on_hand') {
                         let stopValidation = false;
                         // lines.forEach(async(line) => {
                         for (const line of lines)  {
                             const item_quantity = line.quantity
                             const on_hand_qty = line.product.on_hand
-                            console.log(line.product.display_name,"halooo")
+                            console.log(line.on_hand_qty,"halooo")
                             const available_qty = line.product.available
                             // if 
                             if (on_hand_qty < item_quantity){
@@ -44,8 +44,8 @@ odoo.define('custom_koprasi.productScreen', function(require) {
                             }
                           
                         }
-                    } 
-                }
+                //     } 
+                // }
 				// if(this.env.pos.get_order()){
 				// 	console.log("this.env.pos.get_order()")
 
