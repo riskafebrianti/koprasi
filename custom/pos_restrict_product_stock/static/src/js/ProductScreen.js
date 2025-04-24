@@ -9,6 +9,7 @@ const RestrictProductScreen = (ProductScreen) => class RestrictProductScreen ext
     async _clickProduct(event) {
         const product = event.detail;
         var type = this.env.pos.config.stock_type
+        // console.log(product,"miyanee")
         if (this.env.pos.config.is_restrict_product && ((type == 'qty_on_hand') && (product.qty_available <= 0)) | ((type == 'virtual_qty') && (product.virtual_available <= 0)) |
             ((product.qty_available <= 0) && (product.virtual_available <= 0))) {
             // If the product restriction is activated in the settings and quantity is out stock, it show the restrict popup.

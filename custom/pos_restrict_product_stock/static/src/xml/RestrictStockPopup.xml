@@ -14,9 +14,9 @@
                 <div class="button cancel" style="color:red" t-on-click="cancel">
                       Cancel
                 </div>
-                <!-- <div class="button confirm" t-on-click="_OrderProduct">
+                <div class="button confirm" t-on-click="_OrderProduct">
                       Order
-                </div> -->
+                </div>
             </div>
         </div>
         </div>
