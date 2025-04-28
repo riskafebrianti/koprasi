@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+     <record id="view_wizard_periode_form" model="ir.ui.view">
+        <field name="name">partner.wizard.form</field>
+        <field name="model">partner.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Ubah Periode">
+                <group>
+                    <field name="tgl_buka"/>
+                    <field name="tgl_tutup"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- 2. ACTION Wizard -->
+    <record id="action_wizard_example" model="ir.actions.act_window">
+        <field name="name">Ubah Periode</field>
+        <field name="res_model">partner.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_wizard_periode_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- 3. MENU ITEM -->
+    <menuitem 
+        id="custom_koprasi_menuuuu" 
+        name="Periode Buku" 
+        parent="contacts.res_partner_menu_config" 
+        action="action_wizard_example"/>
+
+    <!-- 4. Akses Wizard -->
+    <record id="partner_wizard_access" model="ir.model.access">
+        <field name="name">partner.wizard access</field>
+        <field name="model_id" ref="model_partner_wizard"/>
+        <field name="group_id" ref="base.group_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+</odoo>

@@ -9,3 +9,5 @@ from . import product_template
 from . import pos
 from . import pos_order_line
 from . import pos_order
+from . import res_wizard
+# from . import pos_config

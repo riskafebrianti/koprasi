@@ -20,7 +20,7 @@
     'version': '0.',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','point_of_sale','sale','purchase','website',],
+    'depends': ['base','account','purchase','point_of_sale'],
 
     # always loaded
     'data': [
@@ -31,8 +31,10 @@
         'views/report_tagihan.xml',
         'views/res.xml',
         'views/invoice.xml',
+        # 'views/config.xml',
         'views/res_users.xml',
-        'views/website.xml',
+        'views/res_wizard.xml',
+        # 'views/website.xml',
         'views/pos_order_line.xml',
         'views/pos_order.xml',
         # 'views/stock_move.xml',

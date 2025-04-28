@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
     <odoo>
         <record id="inherit_view_order_form_res" model="ir.ui.view">
-        <field name="name">res.partner.inherit.view.form</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            <!-- Add your xpath here -->
-            <field name="vat" position="after">
-                <!-- <field name="company_partner"/>  -->
-                <field name="company_partner_id"/> 
-                <field name="anggota_koprasi"/>
-                <field name="no_anggota" readonly="1" attrs="{'invisible': [('anggota_koprasi', '=', False)]}"/>
+            <field name="name">res.partner.inherit.view.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- Add your xpath here -->
+                <field name="vat" position="after">
+                    <!-- <field name="company_partner"/>  -->
+                    <field name="company_partner_id"/> 
+                    <field name="anggota_koprasi"/>
+                    <field name="no_anggota" readonly="1" attrs="{'invisible': [('anggota_koprasi', '=', False)]}"/>
+                    
+                </field>
+
+                <field name="function" position="before">
+                    <field name="tabungan"></field>
+                    <field name="approval"/>
+                </field>
+
+                
+                <field name="barcode" position="after">
+                    <field name="limit"></field>
+                    <field name="credit_limit"></field>
+                </field>
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="badan_hukum" placeholder="Badan Hukum"/>
+                </xpath>
+
+                <!-- <group string="Point Of Sale" name="point_of_sale" groups="point_of_sale.group_pos_user">
+                            <field name="barcode"/>
+                        </group> -->
+                <xpath expr="//group[@name='point_of_sale']" position="before">
+                    <group string="Periode buku " name="periode" groups="point_of_sale.group_pos_user">
+                            <field name="option_date"/>
+                            <field name="tgl_buka"/>
+                            <field name="tgl_tutup"/>
+                        </group>
+                </xpath>
+            
+            </field>
+        </record>
+
+  
+        
+        <!-- <record id="server_action_periode" model="ir.actions.server">
+            <field name="name">Ubah Periode</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.open_wizard()
                 
             </field>
-
-             <field name="function" position="before">
-                <field name="tabungan"></field>
-                <field name="approval"/>
-            </field>
-
-
-             <field name="barcode" position="after">
-                <field name="limit"></field>
-                <field name="credit_limit"></field>
-            </field>
-            <xpath expr="//field[@name='parent_id']" position="after">
-                <field name="badan_hukum" placeholder="Badan Hukum"/>
-            </xpath>
-          
-        </field>
-    </record>
-        
+        </record> -->
     
     </odoo>
         <!-- <record model="ir.ui.view" id="nama_model_form">
