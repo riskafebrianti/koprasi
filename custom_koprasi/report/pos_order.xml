@@ -72,7 +72,7 @@
                        </tr>
                         <t t-if="len(o.payment_ids) > 1">
                             <tr>
-                                <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif"> <t t-esc="o.payment_ids.payment_method_id.name"/></td>
+                                <td  style="font-size:16px; width:40%; font-weight:bold;  font-family: sans-serif"> <t t-esc="o.payment_ids[-1].payment_method_id.name"/></td>
                                 <!-- <td style="font-size:13px; width:40%;  font-family: sans-serif"></td> -->
                                 <td colspan="2" align="right" style="font-size:16px; width:20%; "><span>Rp. </span><span t-esc="'{0:,.0f}'.format(int(o.payment_ids[-1].amount))" t-field-options='{"widget": "monetary", "display_currency": x.currency_id}' /></td>
                             </tr>
