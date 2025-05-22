@@ -7,7 +7,7 @@
             <field name="model">pos.order</field>
             <field name="inherit_id" ref="pos_payment_change.view_pos_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='710']" position="replace">
+                <xpath expr="//button[@name='648']" position="replace">
                   <button name="648" 
                         context="{'pos_session_id' : session_id}" 
                         string="Change Paymentss" 
