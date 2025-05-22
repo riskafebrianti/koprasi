@@ -47,6 +47,14 @@
                 <field name="date_orders"/>
                 <field name="partner_ids"/>
             </xpath>
+            
+            <xpath expr="//field[@name='price_unit']" position="replace">
+                 <field name="price_unit" widget="monetary" sum="Total Unit Price"/>
+            </xpath>
+
+            <xpath expr="//field[@name='qty']" position="replace">
+                <field name="qty" sum="Total Qty"/>
+            </xpath>
         </field>
     </record>
        

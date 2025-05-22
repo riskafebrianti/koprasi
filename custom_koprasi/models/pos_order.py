@@ -15,13 +15,77 @@ from odoo.osv.expression import AND
 import base64
 
 _logger = logging.getLogger(__name__)
+ 
+
+    
+
+    
 
 class Pos_orderan(models.Model):
-    _inherit = 'pos.order'
+    _inherit = ['pos.order','portal.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _name = 'pos.order'
 
-    method_pay = fields.Char(string='Payment Method', compute='method_payy',store=True)
+
+    method_pay = fields.Char(string='Payment Method', compute='method_payy',tracking=True, store=True)
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=lambda self: fields.Datetime.context_timestamp(self, fields.Datetime.now()))
     state_invc = fields.Char(string='Status Invoice', store=True)
+    retur_track = fields.Boolean(string='POS Order ini ada Transaksi Retur',tracking=True)
+
+    def refund(self):
+        """Create a copy of order  for refund order"""
+        refund_orders = self.env['pos.order']
+        for order in self:
+            # When a refund is performed, we are creating it in a session having the same config as the original
+            # order. It can be the same session, or if it has been closed the new one that has been opened.
+            current_session = order.session_id.config_id.current_session_id
+            if not current_session:
+                raise UserError(_('To return product(s), you need to open a session in the POS %s', order.session_id.config_id.display_name))
+            refund_order = order.copy(
+                order._prepare_refund_values(current_session)
+            )
+            for line in order.lines:
+                PosOrderLineLot = self.env['pos.pack.operation.lot']
+                for pack_lot in line.pack_lot_ids:
+                    PosOrderLineLot += pack_lot.copy()
+                line.copy(line._prepare_refund_data(refund_order, PosOrderLineLot))
+            refund_orders |= refund_order
+        self.retur_track = True
+
+        return {
+            'name': _('Return Products'),
+            'view_mode': 'form',
+            'res_model': 'pos.order',
+            'res_id': refund_orders.ids[0],
+            'view_id': False,
+            'context': self.env.context,
+            'type': 'ir.actions.act_window',
+            'target': 'current',
+        }
+
+
+
+    def write(self, vals):
+        result = super().write(vals)
+
+        
+      
+        for order in self:
+            if order.payment_ids:
+                
+                payment_names = set(order.payment_ids.mapped('payment_method_id.name'))
+
+        
+                for name in payment_names:
+                    message_text = f"Metode Pembayaran yang dipilih: {name}"
+            
+                    if not order.message_ids.filtered(lambda m: str(message_text) in m.body):    
+                        order.message_post(
+                            body=message_text,
+                            message_type='comment',
+                            subtype_xmlid='mail.mt_note'
+                        )
+
+        return result
 
     @api.depends('state')
     def get_state(self):
@@ -91,5 +155,6 @@ class Pos_orderan(models.Model):
     #         vals.update({'narration': self.note})
     #     return vals
 
-    
+
+  
     

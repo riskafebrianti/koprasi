@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+
+        <record model="ir.ui.view" id="pos_order_view_form_inheritss">
+            <field name="name">pos.order.form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="pos_payment_change.view_pos_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='710']" position="replace">
+                  <button name="710" 
+                        context="{'pos_session_id' : session_id}" 
+                        string="Change Paymentss" 
+                        type="action" 
+                        groups="hr.group_hr_manager"
+                        states="paid,invoiced"/>
+                </xpath>
+                <xpath expr="//button[@name='refund']" position="replace">
+                    <button name="refund" string="Return Products" type="object"  groups="hr.group_hr_manager"
+                        attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
+                </xpath>
+                <!-- <xpath expr="//button[@name='710']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('name', '=', 'Shop/0462')]}</attribute>
+                </xpath> -->
+            </field>
+        </record>
+           
         <record model="ir.ui.view" id="nama_model_treeee">
             <field name="name">pos.order.tree</field>
             <field name="model">pos.order</field>
@@ -9,6 +33,7 @@
                 <xpath expr="//field[@name='state']" position="before">
                     <field name="note"/>
                     <field name="method_pay"/>
+                    <field name="retur_track" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -19,6 +44,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="method_pay" />
+                    <!-- <field name="payment_method_names" invisible="1"/> -->
 
 
                 </xpath>
@@ -27,6 +53,13 @@
                         <!-- <field name="session_move_id" readonly="1"/> -->
                         <field name="state_invc"/>
                     </group>
+                </xpath>
+                <xpath expr="//sheet" position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids" />
+                    </div>
                 </xpath>
             </field>
         </record>

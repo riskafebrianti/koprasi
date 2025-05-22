@@ -44,17 +44,18 @@
 
   
         
-        <!-- <record id="server_action_periode" model="ir.actions.server">
-            <field name="name">Ubah Periode</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="binding_model_id" ref="base.model_res_partner"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.open_wizard()
-                
+        <record id="hr_employee_view_form_inherit_pos_access_right_hrrr" model="ir.ui.view">
+<!--    xml to add new fields to the hr.employee-->
+            <field name="name">hr.employee.view.form.inherit.pos.access.right.hr</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='coach_id']" position="after" >
+                    <field name="change_pay"/>
+                </xpath>
             </field>
-        </record> -->
+        </record>
     
     </odoo>
         <!-- <record model="ir.ui.view" id="nama_model_form">

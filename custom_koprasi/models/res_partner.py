@@ -183,6 +183,7 @@ class Res__Users(models.Model):
 
     # approval = fields.Selection([("cash","Cash"),("card","Card")], string='Approval')
     # approval = fields.Char(string='Product name')
+    # change_payment = fields.Boolean(string='Apakah User ini bisa update change payment?',store=True,)
 
     def generate_no_anggota(self):
         print(self)
@@ -199,3 +200,13 @@ class Res__Users(models.Model):
                 'anggota_koprasi': True,
                 'no_anggota': no_anggota
             })
+  
+    class hr(models.AbstractModel):
+        _inherit = 'hr.employee.base'
+    # class HrEmployeeBase(models.AbstractModel):
+    # """The inherited class HrEmployee to add new fields to 'hr.employee' """
+    # _inherit = "hr.employee.base"
+
+        change_pay = fields.Boolean(string="POS order Ubah Pembayaran", help="Sembunyikn button Change Payment")
+        
+        
