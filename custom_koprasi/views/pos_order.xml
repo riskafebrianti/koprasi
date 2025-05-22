@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="pos_payment_change.view_pos_order_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='710']" position="replace">
-                  <button name="710" 
+                  <button name="648" 
                         context="{'pos_session_id' : session_id}" 
                         string="Change Paymentss" 
                         type="action" 
