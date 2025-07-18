@@ -81,7 +81,7 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">custom_koprasi.report_kwitansi</field>
         <field name="report_file">custom_accounting.report_kwitansi</field>
-        <field name="print_report_name">'Kwitansi - %s' % (object.config_id.name)</field>
+        <field name="print_report_name">'Kwitansi - %s' % (object.name)</field>
         <field name="binding_model_id" ref="account.model_account_move"/>
         <field name="binding_type">report</field>
     </record>
