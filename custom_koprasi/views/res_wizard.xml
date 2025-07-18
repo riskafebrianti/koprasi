@@ -31,7 +31,7 @@
     <menuitem 
         id="custom_koprasi_menuuuu" 
         name="Periode Buku" 
-        parent="contacts.res_partner_menu_config" 
+        parent="contacts.res_partner_menu_contacts" 
         action="action_wizard_example"/>
 
     <!-- 4. Akses Wizard -->
