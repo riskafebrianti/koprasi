@@ -30,8 +30,10 @@ class periode_wizard(models.TransientModel):
     
     @api.model
     def _compute_default_tgl_tutup(self):
+        today = datetime.now()
+        next_month = today + relativedelta(months=1)
         if datetime.now().day > 21: #bila tgl hari ini lebih besar dari 22
-            tgl_tutup = datetime.now().replace(day=21, month =datetime.now().month+1)
+            tgl_tutup = next_month.replace(day=21)
         if datetime.now().day < 21: #bila tgl hari ini lebih besar dari 22
             tgl_tutup = datetime.now().replace(day=21,)
  
