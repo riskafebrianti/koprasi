@@ -118,8 +118,10 @@ class ResPartner(models.Model):
             if record.tgl_tutup and today > record.tgl_tutup:
                 record.option_date = 'def'
                 if today.day > 21: #bila tgl hari ini lebih besar dari 22
+                    next_month = today + relativedelta(months=1)
                     record.tgl_buka = today.replace(day=22,)
-                    record.tgl_tutup = today.replace(day=21, month =today.month+1)
+                    # record.tgl_tutup = today.replace(day=21, month =today.month+1)
+                    record.tgl_tutup = next_month.replace(day=21)
 
                     amount_pos = self.env['account.move'].sudo().search([('partner_id','=',record.id),
                                                                         ('payment_state','=', 'not_paid'),
@@ -130,7 +132,9 @@ class ResPartner(models.Model):
                     record.credit_limit = sum(amount_pos.mapped('amount_total'))
                     
                 if today.day < 22: #bila tgl hari ini lebih besar dari 22
-                    record.tgl_buka = today.replace(day=22, month =today.month-1)
+                    before_month = today - relativedelta(months=1)
+                    record.tgl_buka = before_month.replace(day=21)
+                    # record.tgl_buka = today.replace(day=22, month =today.month-1)
                     record.tgl_tutup = today.replace(day=21,)
 
                     amount_pos = self.env['account.move'].sudo().search([('partner_id','=',record.id),
