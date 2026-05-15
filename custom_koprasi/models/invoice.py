@@ -16,6 +16,13 @@ class Accountnya(models.Model):
     amount = fields.Float(string='Amount', tracking=1)
     counter_account = fields.Many2one(comodel_name='account.account', string='Counter Account', tracking=1)
     other_account = fields.Many2one(comodel_name='account.account', string='Other Account', tracking=1)
+
+# from odoo import models
+
+class NamaModel(models.Model):
+    _inherit = 'account.journal'
+
+    account_differents = fields.Many2one('account.account', string='account Selisih')
     
 class ubah(models.Model):
     _inherit = 'account.move'
@@ -49,6 +56,36 @@ class ubah(models.Model):
                                         "Count",
                                 help="The number of invoices created")
     
+    @api.model
+    def write(self, vals):
+        res = super().write(vals)
+
+        # kode jalan setelah save/create
+       
+        total_debit = sum(self.line_ids.mapped('debit'))
+        total_credit = sum(self.line_ids.mapped('credit'))
+        selisih = total_debit - total_credit
+
+        if self.journal_id.account_differents.id:
+            if total_debit != total_credit:
+                line_vals = {
+                    'move_id': self.id,
+                    'name': 'Auto Balance',
+                    'account_id': self.journal_id.account_differents.id,
+                    'debit': abs(selisih) if selisih < 0 else 0.0,
+                    'credit': selisih if selisih > 0 else 0.0,
+                }
+                if line_vals:
+                    self.write({
+                        'line_ids': [(0, 0, line_vals)]
+                    })
+                print("Account move dibuat")
+        else:
+            raise UserError('Data tidak balance dan silahkan hubungin admin')
+            
+
+        return res
+
     def _compute_pos_count(self):
         """Compute the invoice count"""
         for record in self:
