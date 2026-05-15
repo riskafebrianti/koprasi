@@ -56,35 +56,35 @@ class ubah(models.Model):
                                         "Count",
                                 help="The number of invoices created")
     
-    @api.model
-    def write(self, vals):
-        res = super().write(vals)
+    # @api.model
+    # def write(self, vals):
+    #     res = super().write(vals)
 
-        # kode jalan setelah save/create
+    #     # kode jalan setelah save/create
        
-        total_debit = sum(self.line_ids.mapped('debit'))
-        total_credit = sum(self.line_ids.mapped('credit'))
-        selisih = total_debit - total_credit
+    #     total_debit = sum(self.line_ids.mapped('debit'))
+    #     total_credit = sum(self.line_ids.mapped('credit'))
+    #     selisih = total_debit - total_credit
 
-        if self.journal_id.account_differents.id:
-            if total_debit != total_credit:
-                line_vals = {
-                    'move_id': self.id,
-                    'name': 'Auto Balance',
-                    'account_id': self.journal_id.account_differents.id,
-                    'debit': abs(selisih) if selisih < 0 else 0.0,
-                    'credit': selisih if selisih > 0 else 0.0,
-                }
-                if line_vals:
-                    self.write({
-                        'line_ids': [(0, 0, line_vals)]
-                    })
-                print("Account move dibuat")
-        else:
-            raise UserError('Data tidak balance dan silahkan hubungin admin')
+    #     if self.journal_id.account_differents.id:
+    #         if total_debit != total_credit:
+    #             line_vals = {
+    #                 'move_id': self.id,
+    #                 'name': 'Auto Balance',
+    #                 'account_id': self.journal_id.account_differents.id,
+    #                 'debit': abs(selisih) if selisih < 0 else 0.0,
+    #                 'credit': selisih if selisih > 0 else 0.0,
+    #             }
+    #             if line_vals:
+    #                 self.write({
+    #                     'line_ids': [(0, 0, line_vals)]
+    #                 })
+    #             print("Account move dibuat")
+    #     else:
+    #         raise UserError('Data tidak balance dan silahkan hubungin admin')
             
 
-        return res
+    #     return res
 
     def _compute_pos_count(self):
         """Compute the invoice count"""
