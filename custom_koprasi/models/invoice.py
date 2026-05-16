@@ -1,4 +1,5 @@
 from odoo import Command, _, api, fields, models
+from contextlib import ExitStack, contextmanager
 from odoo.exceptions import UserError,ValidationError
 import math
 import logging
@@ -56,12 +57,39 @@ class ubah(models.Model):
                                         "Count",
                                 help="The number of invoices created")
     
+    @contextmanager
+    def _check_balanced(self, container):
+        ''' Assert the move is fully balanced debit = credit.
+        An error is raised if it's not the case.
+        '''
+        print(container)
+        with self._disable_recursion(container, 'check_move_validity', default=True, target=False) as disabled:
+            yield
+            if disabled:
+                return
+
+        # unbalanced_moves = self._get_unbalanced_moves(container) sa
+        # if unbalanced_moves:
+        #     error_msg = _("An error has occurred.")
+        #     for move_id, sum_debit, sum_credit in unbalanced_moves:
+        #         move = self.browse(move_id)
+        #         error_msg += _(
+        #             "\n\n"
+        #             "The move (%s) is not balanced.\n"
+        #             "The total of debits equals %s and the total of credits equals %s.\n"
+        #             "You might want to specify a default account on journal \"%s\" to automatically balance each move.",
+        #             move.display_name,
+        #             format_amount(self.env, sum_debit, move.company_id.currency_id),
+        #             format_amount(self.env, sum_credit, move.company_id.currency_id),
+        #             move.journal_id.name)
+        #     raise UserError(error_msg)
+    
     # @api.model
     # def write(self, vals):
     #     res = super().write(vals)
 
     #     # kode jalan setelah save/create
-       
+    
     #     total_debit = sum(self.line_ids.mapped('debit'))
     #     total_credit = sum(self.line_ids.mapped('credit'))
     #     selisih = total_debit - total_credit
@@ -80,10 +108,8 @@ class ubah(models.Model):
     #                     'line_ids': [(0, 0, line_vals)]
     #                 })
     #             print("Account move dibuat")
-    #     else:
-    #         raise UserError('Data tidak balance dan silahkan hubungin admin')
-            
-
+    #         else:
+    #             raise UserError('Data tidak balance dan silahkan hubungin admin')
     #     return res
 
     def _compute_pos_count(self):
