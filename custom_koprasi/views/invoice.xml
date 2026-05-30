@@ -214,11 +214,7 @@
           
         </field>
     </record>
-    <menuitem name="Simpanan Wajib" id="menu_1_list" parent="account.menu_finance_receivables" sequence="2"
-        action="nama_model_action_new"/>
-
-    <menuitem name="Simpanan Sukarela" id="menu_2_list" parent="account.menu_finance_receivables" sequence="3"
-        action="nama_model_action_simla"/>
+    
 
     <record id="nama_model_action_new" model="ir.actions.act_window">
         <field name="name">Nama Model</field>
@@ -344,6 +340,12 @@
             </search>
         </field>
     </record>
+
+    <menuitem name="Simpanan Wajib" id="menu_1_list" parent="account.menu_finance_receivables" sequence="2"
+        action="nama_model_action_new"/>
+
+    <menuitem name="Simpanan Sukarela" id="menu_2_list" parent="account.menu_finance_receivables" sequence="3"
+        action="nama_model_action_simla"/>
         
 
     
