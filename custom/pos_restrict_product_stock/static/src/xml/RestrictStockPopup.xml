@@ -5,7 +5,7 @@
         <div role="dialog" class="modal-dialog">
         <div class="popup popup-text popup-med restrict-stock-popup">
             <div class="title">Product Out of Stock</div>
-            <div style="height:100px; margin-top:20px;">
+            <div style="height:250px; margin-top:20px;">
                 <span style="color:#811331"><t t-esc="props.body"/></span> is out of stock.
                 <br/>
                 Click order, if you still want to add this product.
